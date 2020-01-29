@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'com.badlogicgames.gdx', name: 'gdx-box2d', version: '1.9.10'
+
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+sourceSets.main.java.srcDirs = [ "src/" ]
