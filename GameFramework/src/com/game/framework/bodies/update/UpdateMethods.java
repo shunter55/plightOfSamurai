@@ -2,21 +2,22 @@ package com.game.framework.bodies.update;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.game.framework.bodies.Function;
 import com.game.framework.bodies.UpdateFunction;
 import com.game.framework.bodies.WorldBody;
 
 public class UpdateMethods {
 
-    public static UpdateFunction<WorldBody> wasdMovement(final float speed) {
-        return new UpdateFunction<WorldBody>() {
+    public static Function<WorldBody, Void> wasdMovement(final float speed) {
+        return new Function<WorldBody, Void>() {
             @Override
-            public void update(WorldBody body) {
+            public Void call(WorldBody body) {
                 body.getBody().setLinearVelocity(0f, 0f);
 
                 float vel = speed;
 
                 if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                    vel *= 10;
+                    vel *= 2.5;
                 }
 
                 if (Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -34,6 +35,8 @@ public class UpdateMethods {
                 if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                     body.getBody().setLinearVelocity(body.getBody().getLinearVelocity().x, -vel);
                 }
+
+                return null;
             }
         };
     }

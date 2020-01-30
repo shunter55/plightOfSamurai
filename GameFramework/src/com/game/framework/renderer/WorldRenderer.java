@@ -17,12 +17,12 @@ public class WorldRenderer {
     }
 
     public WorldRenderer(float viewWidth, float viewHeight) {
-        this(new OrthographicCamera(
-                viewWidth * ((float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight()),
-                viewHeight * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth())
-        ));
+//        this(new OrthographicCamera(
+//                viewWidth * ((float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight()),
+//                viewHeight * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth())
+//        ));
 
-        System.out.println((float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight());
+        this(new OrthographicCamera(viewWidth, viewHeight));
     }
 
     public WorldRenderer(CameraMode mode) {

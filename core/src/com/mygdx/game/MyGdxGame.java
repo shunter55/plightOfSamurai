@@ -2,12 +2,14 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.bodies.WorldBody;
+import com.game.framework.bodies.update.InputAdapterMethods;
 import com.game.framework.bodies.update.UpdateMethods;
 import com.game.framework.renderer.WorldRenderer;
 import com.game.framework.world.WorldManager;
@@ -27,7 +29,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		worldManager = new WorldManager();
 
 		WorldBody box = worldManager.createBox(BodyDef.BodyType.DynamicBody, 0, 0, 0.1f, 0.1f, 1);
-		box.setUpdate(UpdateMethods.wasdMovement(1.5f));
+		box.setUpdate(UpdateMethods.wasdMovement(3f));
+		//box.setInputAdapter(InputAdapterMethods.wasdInputAdapter(3f));
+
+		worldManager.createBox(BodyDef.BodyType.StaticBody, -2.5f, 0f, 0.01f, 5f, 1);
+		worldManager.createBox(BodyDef.BodyType.StaticBody, 2.5f, 0f, 0.01f, 5f, 1);
+		worldManager.createBox(BodyDef.BodyType.StaticBody, 0f, -2.5f, 5f, 0.01f, 1);
+		worldManager.createBox(BodyDef.BodyType.StaticBody, 0f, 2.5f, 5f, 0.01f, 1);
 
 		worldRenderer = new WorldRenderer(5, 5);
 	}
@@ -39,6 +47,10 @@ public class MyGdxGame extends ApplicationAdapter {
 //		batch.begin();
 //		batch.draw(img, 0, 0);
 //		batch.end();
+
+		if (Gdx.input.isKeyPressed(Input.Keys.R)) {
+			worldManager.createBox(BodyDef.BodyType.DynamicBody, 0, 0, 0.05f, 0.05f, 1);
+		}
 
 		worldManager.updatePhysics(1 / 60f);
 
