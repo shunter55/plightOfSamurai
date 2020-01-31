@@ -1,12 +1,29 @@
 package com.game.framework.bodies;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.game.framework.world.WorldManager;
 
 public class BoxWorldBody extends WorldBody {
 
+    private Vector2 dimensions;
+    private Vector2 origin;
+
     public BoxWorldBody(WorldManager world, String id, BodyDef.BodyType type, float x, float y, float width, float height, float density) {
         super(world, id, createBox(world.getWorld(), type, x, y, width, height, density));
+
+        dimensions = new Vector2(width, height);
+        origin = new Vector2(width / 2, height / 2);
+    }
+
+    @Override
+    public Vector2 getDimensions() {
+        return dimensions;
+    }
+
+    @Override
+    public Vector2 getOrigin() {
+        return origin;
     }
 
     public void dispose() {}
@@ -44,4 +61,5 @@ public class BoxWorldBody extends WorldBody {
 
         return body;
     }
+
 }
