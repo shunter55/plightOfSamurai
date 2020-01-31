@@ -3,6 +3,8 @@ package com.game.framework.renderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -55,12 +57,25 @@ public class WorldRenderer {
         }
     }
 
+    private float elapsedTime = 0;
     private void render(Renderable renderable) {
+
+        WorldBodyAnimation animation = renderable.getAnimation();
+
+
+        // Get Textures to render.
+//        Animation<Texture> animation =
+//            renderable.getFrameTime() != -1 && renderable.getFrames() != null && !renderable.getFrames().isEmpty() ?
+//                new Animation<>(renderable.getFrameTime(), renderable.getFrames()) :
+//                null;
+
         // Do not render if there is no sprite.
-        if (renderable.getTexture() == null)
+        if (animation == null)
             return;
 
-        Sprite sprite = new Sprite(renderable.getTexture());
+        //Sprite sprite = new Sprite(renderable.getTexture());
+        //Sprite sprite = new Sprite(animation.getKeyFrame(elapsedTime));
+        Sprite sprite = new Sprite(renderable.getFrame());
 
         // Image width and height in terms of World Coordinates.
         Vector2 worldRatio = Utils.toWorldRatio(
@@ -89,10 +104,15 @@ public class WorldRenderer {
         spriteBatch.begin();
         sprite.draw(spriteBatch);
         spriteBatch.end();
+
+        //animation.incrementTime(1f / 60f);
+//        elapsedTime += 1f / 60f;
+//        elapsedTime %= renderable.getFrameTime() * renderable.getFrames().size;
     }
 
     public void dispose() {
         debugRenderer.dispose();
+        spriteBatch.dispose();
     }
 
     private static Camera getCamera(CameraMode mode, float worldWidth, float worldHeight) {

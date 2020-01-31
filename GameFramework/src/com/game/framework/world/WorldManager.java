@@ -43,7 +43,7 @@ public class WorldManager {
         world.step(timeStep, 6, 2);
 
         for (WorldBody body : worldBodies.values()) {
-            body.update();
+            body.update(timeStep);
         }
     }
 
@@ -77,9 +77,9 @@ public class WorldManager {
         return body;
     }
 
-    public WorldBody createCustom(BodyDef.BodyType type, String imgPath, String shapePath, float x, float y, float scale, float density) {
+    public WorldBody createCustom(BodyDef.BodyType type, String shapePath, float x, float y, float scale, float density) {
         String id = getNextId();
-        CustomWorldBody body = new CustomWorldBody(this, id, imgPath, shapePath, type, x, y, scale, density);
+        CustomWorldBody body = new CustomWorldBody(this, id, shapePath, type, x, y, scale, density);
         worldBodies.put(id, body);
 
         return body;

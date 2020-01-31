@@ -40,7 +40,6 @@ public class Sample extends ApplicationAdapter {
         // Create a CustomObject using Box2dEditor. (samurai/idle1
         worldManager.createCustom(
                 BodyDef.BodyType.DynamicBody,
-                "samurai/idle/samurai_idle_front_1_64.png",
                 "samurai/idle1",
                 0f,
                 0f,

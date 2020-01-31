@@ -2,6 +2,7 @@ package com.game.framework.bodies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -15,9 +16,8 @@ public class CustomWorldBody extends WorldBody implements Renderable {
     private Vector2 dimensions;
     private Vector2 origin;
 
-    public CustomWorldBody(WorldManager world, String id, String imgPath, String shapePath, BodyDef.BodyType type, float x, float y, float scale, float density) {
+    public CustomWorldBody(WorldManager world, String id, String shapePath, BodyDef.BodyType type, float x, float y, float scale, float density) {
         super(world, id, createCustom(world.getWorld(), type, shapePath, x, y, scale, density));
-        super.setImage(imgPath);
 
         this.dimensions = new Vector2(scale, scale);
 
@@ -46,7 +46,7 @@ public class CustomWorldBody extends WorldBody implements Renderable {
         // body definition
         BodyDef playerDef = new BodyDef();
         playerDef.type = type;
-        playerDef.fixedRotation = false;
+        playerDef.fixedRotation = true;
 
         // fixture definition
         FixtureDef fixtureDef = new FixtureDef();

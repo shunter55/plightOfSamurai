@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Anything that has a Image that can be rendered.
  */
-public interface Renderable {
+public interface Renderable extends Animated {
 
     /**
      * The World coordinates that the Image should be drawn.
@@ -36,9 +37,9 @@ public interface Renderable {
     public float getRotationRadians();
 
     /**
-     * The Texture that should be rendered. Null if nothing to render.
-     * @return Texture to render, or null.
+     * The Animation that should be run if any.
+     * @return The WorldBodyAnimation that should run, or null.
      */
-    public Texture getTexture();
+    public WorldBodyAnimation getAnimation();
 
 }
