@@ -3,12 +3,9 @@ package com.game.framework.renderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.game.framework.utils.Utils;
 import com.game.framework.world.WorldManager;
@@ -21,20 +18,20 @@ public class WorldRenderer {
     private Box2DDebugRenderer debugRenderer;
 
     public enum CameraMode {
-        Stretch, Zoom
+        // Objects will be stretched to fill the screen.
+        Stretch,
+        // Aspect ratio of Objects will be preserved. Screen will have sidebars.
+        Zoom
     }
 
-    public WorldRenderer(float viewWidth, float viewHeight) {
-//        this(new OrthographicCamera(
-//                viewWidth * ((float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight()),
-//                viewHeight * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth())
-//        ));
-
-        this(new OrthographicCamera(viewWidth, viewHeight));
-    }
-
-    public WorldRenderer(CameraMode mode) {
-        this(getCamera(mode));
+    /**
+     * Create a World Renderer.
+     * @param mode The mode to render.
+     * @param viewWidth
+     * @param viewHeight
+     */
+    public WorldRenderer(CameraMode mode, float viewWidth, float viewHeight) {
+        this(getCamera(mode, viewWidth, viewHeight));
     }
 
     public WorldRenderer(Camera camera) {
@@ -98,10 +95,13 @@ public class WorldRenderer {
         debugRenderer.dispose();
     }
 
-    private static Camera getCamera(CameraMode mode) {
+    private static Camera getCamera(CameraMode mode, float worldWidth, float worldHeight) {
         switch (mode) {
-            case Stretch: return new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            //case Zoom: return new PerspectiveCamera(180f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            case Stretch: return new OrthographicCamera(worldWidth, worldHeight);
+            case Zoom: {
+                Vector2 worldRatio = Utils.toWorldRatio(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), worldWidth, worldHeight);
+                return new OrthographicCamera(worldRatio.x, worldRatio.y);
+            }
         }
         throw new RuntimeException("Invalid camera mode: " + mode);
     }

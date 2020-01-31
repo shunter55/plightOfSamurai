@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.bodies.WorldBody;
 import com.game.framework.bodies.update.InputAdapterMethods;
@@ -15,13 +16,19 @@ import com.game.framework.bodies.update.UpdateMethods;
 import com.game.framework.renderer.WorldRenderer;
 import com.game.framework.world.WorldManager;
 
+import java.util.Vector;
+
 public class MyGdxGame extends ApplicationAdapter {
 	WorldManager worldManager;
 	WorldRenderer worldRenderer;
+
+	Vector2 worldSize = new Vector2(5, 5);
 	
 	@Override
 	public void create () {
 		worldManager = new WorldManager();
+
+		worldRenderer = new WorldRenderer(WorldRenderer.CameraMode.Zoom, worldSize.x, worldSize.y);
 
 		WorldBody box = worldManager.createBox(BodyDef.BodyType.DynamicBody, -2.4f, -2.4f, 0.1f, 0.1f, 1);
 		box.setUpdate(UpdateMethods.wasdMovement(3f));
@@ -40,8 +47,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		worldManager.createBox(BodyDef.BodyType.StaticBody, 2.5f, 0f, 0.01f, 5f, 1);
 		worldManager.createBox(BodyDef.BodyType.StaticBody, 0f, -2.5f, 5f, 0.01f, 1);
 		worldManager.createBox(BodyDef.BodyType.StaticBody, 0f, 2.5f, 5f, 0.01f, 1);
-
-		worldRenderer = new WorldRenderer(5, 5);
 	}
 
 	@Override
@@ -57,10 +62,17 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		worldRenderer.render(worldManager);
 	}
-	
+
 	@Override
 	public void dispose () {
 		worldManager.dispose();
 		worldRenderer.dispose();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		if (worldRenderer != null)
+			worldRenderer.dispose();
+		worldRenderer = new WorldRenderer(WorldRenderer.CameraMode.Zoom, worldSize.x, worldSize.y);
 	}
 }

@@ -17,11 +17,11 @@ public class Utils {
         float rPixel = pixWidth / pixHeight;
         float rWorld = worldWidth / worldHeight;
 
-        //if (rWorld > rPixel) {
-        //    return new Vector2(pixWidth * (worldHeight / pixHeight), worldHeight);
-        //} else {
+        if (rWorld <= rPixel) {
+            return new Vector2(pixWidth * (worldHeight / pixHeight), worldHeight);
+        } else {
             return new Vector2(worldWidth, pixHeight * (worldWidth / pixWidth));
-        //}
+        }
     }
 
 }
