@@ -45,45 +45,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		//box.setInputAdapter(InputAdapterMethods.wasdInputAdapter(3f));
 		box.runAnimation(new WorldBodyAnimation("samurai/idle/samurai_idle_front_1_64.png"));
 
-		samurai = worldManager.createCustom(
-			BodyDef.BodyType.DynamicBody,
-			"samurai/idle1",
-			0f,
-			0f,
-			1f,
-			1);
-
-		samuraiIdle = new WorldBodyAnimation(1f / 4f,
-			"samurai/idle/samurai_idle_front_1_64.png",
-			"samurai/idle/samurai_idle_front_2_64.png",
-			"samurai/idle/samurai_idle_front_3_64.png",
-			"samurai/idle/samurai_idle_front_4_64.png");
-		samuraiAttack = new WorldBodyAnimation(1f / 16f,
-				"samurai/attack/samurai_attack_1_64.png",
-				"samurai/attack/samurai_attack_2_64.png",
-				"samurai/attack/samurai_attack_3_64.png",
-				"samurai/attack/samurai_attack_4_64.png");
-
-		samurai.runAnimation(samuraiIdle);
-
-		samurai.setInputAdapter(new Function<WorldBody, InputAdapter>() {
-			@Override
-			public InputAdapter call(final WorldBody worldBody) {
-				return new InputAdapter() {
-					@Override
-					public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-						worldBody.runAnimation(samuraiAttack, new Function<Void, Void>() {
-							@Override
-							public Void call(Void aVoid) {
-								worldBody.runAnimation(samuraiIdle);
-								return null;
-							}
-						});
-						return true;
-					}
-				};
-			}
-		});
+		samurai = buildSamurai();
 
 //		samurai.setFrames(1f / 4f,
 //			"samurai/idle/samurai_idle_front_1_64.png",
@@ -127,5 +89,54 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (worldRenderer != null)
 			worldRenderer.dispose();
 		worldRenderer = new WorldRenderer(WorldRenderer.CameraMode.Zoom, worldSize.x, worldSize.y);
+	}
+
+	private WorldBody buildSamurai() {
+		WorldBody samurai = worldManager.createCustom(
+				BodyDef.BodyType.DynamicBody,
+				"samurai/idle1", 0f, 0f, 0.51f, 1);
+
+		samuraiIdle = new WorldBodyAnimation(1f / 4f,
+				"samurai/idle/samurai_idle_front_1_64.png",
+				"samurai/idle/samurai_idle_front_2_64.png",
+				"samurai/idle/samurai_idle_front_3_64.png",
+				"samurai/idle/samurai_idle_front_4_64.png");
+		samuraiAttack = new WorldBodyAnimation(1f / 16f,
+				"samurai/attack/samurai_attack_1_64.png",
+				"samurai/attack/samurai_attack_2_64.png",
+				"samurai/attack/samurai_attack_3_64.png",
+				"samurai/attack/samurai_attack_4_64.png");
+
+		samurai.runAnimation(samuraiIdle);
+
+		samurai.beginCollision(new Function<WorldBody, Void>() {
+			@Override
+			public Void call(WorldBody worldBody) {
+				if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
+					worldManager.remove(worldBody);
+				return null;
+			}
+		});
+
+		samurai.setInputAdapter(new Function<WorldBody, InputAdapter>() {
+			@Override
+			public InputAdapter call(final WorldBody worldBody) {
+				return new InputAdapter() {
+					@Override
+					public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+						worldBody.runAnimation(samuraiAttack, new Function<Void, Void>() {
+							@Override
+							public Void call(Void aVoid) {
+								worldBody.runAnimation(samuraiIdle);
+								return null;
+							}
+						});
+						return true;
+					}
+				};
+			}
+		});
+
+		return samurai;
 	}
 }

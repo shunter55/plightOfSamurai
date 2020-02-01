@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.game.framework.renderer.Animated;
 import com.game.framework.renderer.Renderable;
@@ -15,7 +16,7 @@ import com.game.framework.world.WorldManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class WorldBody implements Renderable, Animated {
+public abstract class WorldBody implements Renderable, Collidable {
 
     private WorldManager world;
     private Body body;
@@ -26,6 +27,10 @@ public abstract class WorldBody implements Renderable, Animated {
     // Animated
     private float elapsedTime;
     private Function<Void, Void> animationCallback;
+
+    // Collidable
+    private Function<WorldBody, Void> _beginCollision = null;
+    private Function<WorldBody, Void> _endCollision = null;
 
     // Unique identifier in WorldManager
     private String id;
@@ -39,6 +44,8 @@ public abstract class WorldBody implements Renderable, Animated {
         this.body = body;
 
         this.id = id;
+
+        this.body.setUserData(this);
     }
 
     /**
@@ -77,26 +84,12 @@ public abstract class WorldBody implements Renderable, Animated {
         return body;
     }
 
+    public String getId() {
+        return id;
+    }
+
 
     // Renderable -----------------------------------------------------------------------------------
-
-//    /**
-//     * Sets the animation to use.
-//     * @param animation The Animation to use.
-//     */
-//    public void setAnimation(WorldBodyAnimation animation) {
-//        runAnimation(animation);
-//    }
-//
-//    /**
-//     * Use setAnimation(WorldBodyAnimation) with 1 Texture if you have many bodies using the same Texture.
-//     * Creates a new WorldBodyAnimation with 1 image.
-//     * @param imgPath The path to the image to load.
-//     */
-//    public void setImage(String imgPath) {
-//        runAnimation(new WorldBodyAnimation(imgPath));
-//    }
-
     @Override
     public Vector2 getWorldPos() {
         return body.getPosition();
@@ -109,7 +102,6 @@ public abstract class WorldBody implements Renderable, Animated {
     // ---------------------------------------------------------------------------------------------
 
     // Animations ------------------------------------------------------------------------------------
-
     @Override
     public void runAnimation(WorldBodyAnimation animation) {
         runAnimation(animation, null);
@@ -149,6 +141,31 @@ public abstract class WorldBody implements Renderable, Animated {
     @Override
     public WorldBodyAnimation getAnimation() {
         return animation;
+    }
+    // ---------------------------------------------------------------------------------------------
+
+    // Collidable ----------------------------------------------------------------------------------
+
+    public void beginCollision(Function<WorldBody, Void> beginCollisionFn) {
+        this._beginCollision = beginCollisionFn;
+    }
+
+    public void endCollision(Function<WorldBody, Void> endCollisionFn) {
+        this._endCollision = endCollisionFn;
+    }
+
+    @Override
+    public void beginContact(Collidable other) {
+        if (_beginCollision != null) {
+            _beginCollision.call((WorldBody) other);
+        }
+    }
+
+    @Override
+    public void endContact(Collidable other) {
+        if (_endCollision != null) {
+            _endCollision.call((WorldBody) other);
+        }
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -36,9 +36,7 @@ public class CustomWorldBody extends WorldBody implements Renderable {
     }
 
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() {}
 
     private static Body createCustom(World world, BodyDef.BodyType type, String shapePath, float x, float y, float scale, float density) {
         BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal(shapePath));
