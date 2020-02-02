@@ -5,9 +5,10 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.game.framework.bodies.joints.Joint;
+import com.game.framework.bodies.joints.Weld;
 import com.game.framework.renderer.Animated;
 import com.game.framework.renderer.Renderable;
 import com.game.framework.renderer.WorldBodyAnimation;
@@ -88,8 +89,24 @@ public abstract class WorldBody implements Renderable, Collidable {
         return id;
     }
 
+    public WorldManager getWorld() {
+        return world;
+    }
+
 
     // Renderable -----------------------------------------------------------------------------------
+    public void setWorldPos(Vector2 pos) {
+        body.setTransform(pos, body.getTransform().getRotation());
+    }
+
+    public void setAngleRadians(float radians) {
+        body.setTransform(getWorldPos(), radians);
+    }
+
+    public void setAngleDegrees(float degrees) {
+        setAngleRadians((float) (degrees * Math.PI / 180));
+    }
+
     @Override
     public Vector2 getWorldPos() {
         return body.getPosition();
@@ -169,6 +186,10 @@ public abstract class WorldBody implements Renderable, Collidable {
     }
 
     // ---------------------------------------------------------------------------------------------
+
+    public void attachJoint(Joint joint) {
+        joint.buildOn(this);
+    }
 
     public abstract void dispose();
 

@@ -90,9 +90,9 @@ public class WorldManager {
      * @param density
      * @return
      */
-    public WorldBody createBox(BodyDef.BodyType type, float x, float y, float width, float height, float density) {
+    public WorldBody createBox(BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density) {
         String id = getNextId();
-        BoxWorldBody body = new BoxWorldBody(this, id, type, x, y, width, height, density);
+        BoxWorldBody body = new BoxWorldBody(this, id, type, isSensor, x, y, width, height, density);
         worldBodies.put(id, body);
 
         return body;
