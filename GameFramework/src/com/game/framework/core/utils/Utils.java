@@ -1,4 +1,4 @@
-package com.game.framework.utils;
+package com.game.framework.core.utils;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,6 +13,10 @@ public class Utils {
      * @return The width and height in World Space, maintaining the pixel aspect ratio.
      */
     public static Vector2 toWorldRatio(int pixWidth, int pixHeight, float worldWidth, float worldHeight) {
+        pixWidth = Math.abs(pixWidth);
+        pixHeight = Math.abs(pixHeight);
+        worldWidth = Math.abs(worldWidth);
+        worldHeight = Math.abs(worldHeight);
 
         float rPixel = pixWidth / pixHeight;
         float rWorld = worldWidth / worldHeight;

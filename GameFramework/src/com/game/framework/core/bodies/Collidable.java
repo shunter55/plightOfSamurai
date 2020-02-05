@@ -1,4 +1,4 @@
-package com.game.framework.bodies;
+package com.game.framework.core.bodies;
 
 /**
  * Anything that can be collided with.

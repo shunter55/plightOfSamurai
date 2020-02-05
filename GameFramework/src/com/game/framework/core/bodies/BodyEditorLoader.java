@@ -1,4 +1,4 @@
-package com.game.framework.bodies;
+package com.game.framework.core.bodies;
 
 //package aurelienribon.bodyeditor;
 
@@ -76,7 +76,7 @@ public class BodyEditorLoader {
      * @param fd The fixture parameters to apply to the created body fixture.
      * @param scale The desired scale of the body. The default width is 1.
      */
-    public void attachFixture(Body body, String name, FixtureDef fd, float scale) {
+    public void attachFixture(Body body, String name, FixtureDef fd, Vector2 scale) {
         RigidBodyModel rbModel = model.rigidBodies.get(name);
         if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
@@ -103,7 +103,7 @@ public class BodyEditorLoader {
         for (int i=0, n=rbModel.circles.size(); i<n; i++) {
             CircleModel circle = rbModel.circles.get(i);
             Vector2 center = newVec().set(circle.center).scl(scale);
-            float radius = circle.radius * scale;
+            float radius = circle.radius * scale.x; // TODO: Scaling circles should make ellipse.
 
             circleShape.setPosition(center);
             circleShape.setRadius(radius);
@@ -130,7 +130,7 @@ public class BodyEditorLoader {
      * size. Warning: this method returns the same Vector2 object each time, so
      * copy it if you need it for later use.
      */
-    public Vector2 getOrigin(String name, float scale) {
+    public Vector2 getOrigin(String name, Vector2 scale) {
         RigidBodyModel rbModel = model.rigidBodies.get(name);
         if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 

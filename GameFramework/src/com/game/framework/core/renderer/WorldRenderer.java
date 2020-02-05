@@ -1,16 +1,14 @@
-package com.game.framework.renderer;
+package com.game.framework.core.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.game.framework.utils.Utils;
-import com.game.framework.world.WorldManager;
+import com.game.framework.core.utils.Utils;
+import com.game.framework.core.world.WorldManager;
 
 public class WorldRenderer {
 
@@ -43,6 +41,19 @@ public class WorldRenderer {
         debugRenderer = new Box2DDebugRenderer();
     }
 
+    /**
+     * Move the Camera by deltaPos.
+     * @param deltaPos Move the camera by deltaPos.
+     */
+    public void moveBy(Vector2 deltaPos) {
+        camera.translate(deltaPos.x, deltaPos.y, camera.position.z);
+        camera.update();
+    }
+
+    public Vector2 getWorldPos() {
+        return new Vector2(camera.position.x, camera.position.y);
+    }
+
     public void render(WorldManager world) {
         render(world, camera);
     }
@@ -57,25 +68,21 @@ public class WorldRenderer {
         }
     }
 
-    private float elapsedTime = 0;
     private void render(Renderable renderable) {
-
         WorldBodyAnimation animation = renderable.getAnimation();
-
-
-        // Get Textures to render.
-//        Animation<Texture> animation =
-//            renderable.getFrameTime() != -1 && renderable.getFrames() != null && !renderable.getFrames().isEmpty() ?
-//                new Animation<>(renderable.getFrameTime(), renderable.getFrames()) :
-//                null;
 
         // Do not render if there is no sprite.
         if (animation == null)
             return;
 
-        //Sprite sprite = new Sprite(renderable.getTexture());
-        //Sprite sprite = new Sprite(animation.getKeyFrame(elapsedTime));
         Sprite sprite = new Sprite(renderable.getFrame());
+
+        sprite.setFlip(animation.flipHorizontal, animation.flipVertical);
+        Vector2 origin = new Vector2(renderable.getOrigin().x, renderable.getOrigin().y);
+        if (animation.flipHorizontal) {
+            origin.x = Math.abs(renderable.getDimensions().x) - renderable.getOrigin().x;
+            origin.y = Math.abs(renderable.getDimensions().y) - renderable.getOrigin().y;
+        }
 
         // Image width and height in terms of World Coordinates.
         Vector2 worldRatio = Utils.toWorldRatio(
@@ -85,17 +92,15 @@ public class WorldRenderer {
                 renderable.getDimensions().y);
 
         // Set Origin.
-        sprite.setOrigin(
-                renderable.getOrigin().x,
-                renderable.getOrigin().y);
+        sprite.setOrigin(origin.x, origin.y);
 
         // Set Rotation.
         sprite.rotate((float) Math.toDegrees(renderable.getRotationRadians()));
 
         // Set Position and Size
         sprite.setBounds(
-                renderable.getWorldPos().x - renderable.getOrigin().x,
-                renderable.getWorldPos().y - renderable.getOrigin().y,
+                renderable.getWorldPos().x - origin.x,
+                renderable.getWorldPos().y - origin.y,
                 worldRatio.x,
                 worldRatio.y);
 
@@ -104,10 +109,6 @@ public class WorldRenderer {
         spriteBatch.begin();
         sprite.draw(spriteBatch);
         spriteBatch.end();
-
-        //animation.incrementTime(1f / 60f);
-//        elapsedTime += 1f / 60f;
-//        elapsedTime %= renderable.getFrameTime() * renderable.getFrames().size;
     }
 
     public void dispose() {

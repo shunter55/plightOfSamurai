@@ -1,18 +1,14 @@
-package com.game.framework.bodies;
+package com.game.framework.core.bodies;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
-import com.game.framework.bodies.joints.Joint;
-import com.game.framework.bodies.joints.Weld;
-import com.game.framework.renderer.Animated;
-import com.game.framework.renderer.Renderable;
-import com.game.framework.renderer.WorldBodyAnimation;
-import com.game.framework.world.WorldManager;
+import com.game.framework.core.bodies.joints.Joint;
+import com.game.framework.core.controller.InputProcessor;
+import com.game.framework.core.renderer.Renderable;
+import com.game.framework.core.renderer.WorldBodyAnimation;
+import com.game.framework.core.world.WorldManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +29,23 @@ public abstract class WorldBody implements Renderable, Collidable {
     private Function<WorldBody, Void> _beginCollision = null;
     private Function<WorldBody, Void> _endCollision = null;
 
+    // Joints
+    private List<Joint> joints;
+
+    // Flip
+    private boolean isFlippedX = false;
+    private boolean isFlippedY = false;
+
     // Unique identifier in WorldManager
     private String id;
     // Update function that will be called when the World updates.
     private Function<WorldBody, Void> updateFn;
-    // InputAdapter function.
-    private Function<WorldBody, InputAdapter> inputAdapterFn;
 
     WorldBody(WorldManager world, String id, Body body) {
         this.world = world;
         this.body = body;
+
+        this.joints = new ArrayList<>();
 
         this.id = id;
 
@@ -78,7 +81,7 @@ public abstract class WorldBody implements Renderable, Collidable {
      * @param inputAdapterFn Function that takes this WorldBody and returns a InputAdapter for it.
      */
     public void setInputAdapter(Function<WorldBody, InputAdapter> inputAdapterFn) {
-        Gdx.input.setInputProcessor(inputAdapterFn.call(this));
+        InputProcessor.getInputProcessor().addInput(this, inputAdapterFn.call(this));
     }
 
     public Body getBody() {
@@ -92,6 +95,33 @@ public abstract class WorldBody implements Renderable, Collidable {
     public WorldManager getWorld() {
         return world;
     }
+
+    public void flipX() {
+        isFlippedX = !isFlippedX;
+        rebuildBody(new Vector2(-1, 1));
+    }
+
+    public void flipY() {
+        isFlippedY = !isFlippedY;
+        rebuildBody(new Vector2(1, -1));
+    }
+
+    public void rebuildBody(Vector2 scale) {
+        BodyDef.BodyType type = body.getType();
+        boolean isSensor = body.getFixtureList().first().isSensor();
+        Vector2 pos = getWorldPos();
+        Vector2 dim = getDimensions();
+        float density = body.getFixtureList().first().getDensity();
+
+        world.remove(this, aVoid -> {
+            this.body = copyBody(type, isSensor, pos, dim, scale, density);
+            this.body.setUserData(this);
+            world.addBody(this);
+            return null;
+        });
+    }
+
+    public abstract Body copyBody(BodyDef.BodyType type, boolean isSensor, Vector2 pos, Vector2 dim, Vector2 scale, float density);
 
 
     // Renderable -----------------------------------------------------------------------------------
@@ -157,6 +187,10 @@ public abstract class WorldBody implements Renderable, Collidable {
 
     @Override
     public WorldBodyAnimation getAnimation() {
+        if (animation != null) {
+            animation.flipHorizontal = isFlippedX;
+            animation.flipVertical = isFlippedY;
+        }
         return animation;
     }
     // ---------------------------------------------------------------------------------------------
@@ -189,8 +223,13 @@ public abstract class WorldBody implements Renderable, Collidable {
 
     public void attachJoint(Joint joint) {
         joint.buildOn(this);
+        joints.add(joint);
     }
 
-    public abstract void dispose();
+    public void dispose() {
+        for (Joint joint : joints) {
+            joint.dispose();
+        }
+    }
 
 }

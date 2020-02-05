@@ -1,10 +1,9 @@
-package com.game.framework.bodies.update;
+package com.game.framework.core.bodies.update;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.game.framework.bodies.Function;
-import com.game.framework.bodies.UpdateFunction;
-import com.game.framework.bodies.WorldBody;
+import com.game.framework.core.bodies.Function;
+import com.game.framework.core.bodies.WorldBody;
 
 public class UpdateMethods {
 

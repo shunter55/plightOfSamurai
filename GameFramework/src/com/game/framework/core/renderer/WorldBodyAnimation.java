@@ -1,9 +1,8 @@
-package com.game.framework.renderer;
+package com.game.framework.core.renderer;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.utils.Array;
-import com.game.framework.bodies.WorldBody;
 
 public class WorldBodyAnimation {
 
@@ -13,6 +12,8 @@ public class WorldBodyAnimation {
 
     private float frameTime;
     private Array<Texture> frames;
+    public boolean flipHorizontal = false;
+    public boolean flipVertical = false;
 
     /**
      * Create a animation with 1 frame.
@@ -37,6 +38,24 @@ public class WorldBodyAnimation {
         this.frames = frames;
 
         animation = new Animation<>(frameTime, frames);
+    }
+
+    public WorldBodyAnimation(WorldBodyAnimation worldBodyAnimation) {
+        elapsedTime = worldBodyAnimation.elapsedTime;
+        animation = worldBodyAnimation.animation;
+        frameTime = worldBodyAnimation.frameTime;
+        frames = worldBodyAnimation.frames;
+        flipHorizontal = worldBodyAnimation.flipHorizontal;
+    }
+
+    public WorldBodyAnimation flipHorizontal() {
+        flipHorizontal = !flipHorizontal;
+        return this;
+    }
+
+    public WorldBodyAnimation flipVertical() {
+        flipVertical = !flipVertical;
+        return this;
     }
 
     public float getFrameTime() {

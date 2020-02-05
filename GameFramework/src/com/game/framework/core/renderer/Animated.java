@@ -1,9 +1,7 @@
-package com.game.framework.renderer;
+package com.game.framework.core.renderer;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.Array;
-import com.game.framework.bodies.Function;
-import com.game.framework.bodies.WorldBody;
+import com.game.framework.core.bodies.Function;
 
 public interface Animated {
 

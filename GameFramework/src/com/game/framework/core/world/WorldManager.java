@@ -1,15 +1,14 @@
-package com.game.framework.world;
+package com.game.framework.core.world;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.game.framework.bodies.BoxWorldBody;
-import com.game.framework.bodies.Collidable;
-import com.game.framework.bodies.CustomWorldBody;
-import com.game.framework.bodies.WorldBody;
+import com.game.framework.core.bodies.BoxWorldBody;
+import com.game.framework.core.bodies.CustomWorldBody;
+import com.game.framework.core.bodies.Function;
+import com.game.framework.core.bodies.WorldBody;
+import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Manages a single Box2d World.
@@ -21,7 +20,7 @@ public class WorldManager {
 
     private int nextObjectId = 0;
 
-    private Map<String, WorldBody> bodiesToDestroy;
+    private Map<String, Pair<WorldBody, Function<Void, Void>>> bodiesToDestroy;
 
     public WorldManager() {
         this(new Vector2(0, 0), true);
@@ -61,15 +60,24 @@ public class WorldManager {
     /**
      * Remove a WorldBody from the world.
      * @param id The WorldBody's id.
-     * @return The WorldBody that was removed.
+     * @return The WorldBody that was removed. null if it does not exist.
      */
-    public WorldBody remove(String id) {
-        bodiesToDestroy.put(id, worldBodies.get(id));
+    public WorldBody remove(String id, Function<Void, Void> callback) {
+        if (worldBodies.containsKey(id))
+            bodiesToDestroy.put(id, new Pair<>(worldBodies.get(id), callback));
         return worldBodies.get(id);
     }
 
+    public WorldBody remove(String id) {
+        return remove(id, null);
+    }
+
     public WorldBody remove(WorldBody body) {
-        return remove(body.getId());
+        return remove(body.getId(), null);
+    }
+
+    public WorldBody remove(WorldBody body, Function<Void, Void> callback) {
+        return remove(body.getId(), callback);
     }
 
     public void dispose() {
@@ -78,6 +86,15 @@ public class WorldManager {
         }
 
         world.dispose();
+    }
+
+    public void addBody(WorldBody body) {
+        System.out.println("addBody");
+        worldBodies.put(body.getId(), body);
+    }
+
+    public WorldBody getBody(String id) {
+        return worldBodies.get(id);
     }
 
     /**
@@ -91,18 +108,14 @@ public class WorldManager {
      * @return
      */
     public WorldBody createBox(BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density) {
-        String id = getNextId();
-        BoxWorldBody body = new BoxWorldBody(this, id, type, isSensor, x, y, width, height, density);
-        worldBodies.put(id, body);
-
+        BoxWorldBody body = new BoxWorldBody(this, generateId(), type, isSensor, x, y, width, height, density);
+        addBody(body);
         return body;
     }
 
-    public WorldBody createCustom(BodyDef.BodyType type, String shapePath, float x, float y, float scale, float density) {
-        String id = getNextId();
-        CustomWorldBody body = new CustomWorldBody(this, id, shapePath, type, x, y, scale, density);
-        worldBodies.put(id, body);
-
+    public WorldBody createCustom(BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density) {
+        CustomWorldBody body = new CustomWorldBody(this, generateId(), shapePath, type, x, y, scale, density);
+        addBody(body);
         return body;
     }
 
@@ -110,18 +123,21 @@ public class WorldManager {
         return worldBodies.values();
     }
 
-    private String getNextId() {
+    public String generateId() {
         return Integer.toString(++nextObjectId);
     }
 
     private void destroyBodies() {
-        for (WorldBody body : bodiesToDestroy.values()) {
-            world.destroyBody(body.getBody());
-            worldBodies.remove(body.getId());
-            body.dispose();
-        }
-
+        Set<Pair<WorldBody, Function<Void, Void>>> toDestroy = new HashSet<>(bodiesToDestroy.values());
         bodiesToDestroy.clear();
+
+        for (Pair<WorldBody, Function<Void, Void>> body : toDestroy) {
+            world.destroyBody(body.getKey().getBody());
+            worldBodies.remove(body.getKey().getId());
+            body.getKey().dispose();
+            if (body.getValue() != null)
+                body.getValue().call(null);
+        }
     }
 
     private ContactListener getContactListener() {

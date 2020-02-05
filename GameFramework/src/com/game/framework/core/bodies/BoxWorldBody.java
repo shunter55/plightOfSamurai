@@ -1,8 +1,8 @@
-package com.game.framework.bodies;
+package com.game.framework.core.bodies;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.game.framework.world.WorldManager;
+import com.game.framework.core.world.WorldManager;
 
 public class BoxWorldBody extends WorldBody {
 
@@ -26,7 +26,10 @@ public class BoxWorldBody extends WorldBody {
         return origin;
     }
 
-    public void dispose() {}
+    @Override
+    public Body copyBody(BodyDef.BodyType type, boolean isSensor, Vector2 pos, Vector2 dim, Vector2 scale, float density) {
+        return createBox(getWorld().getWorld(), type, isSensor, pos.x, pos.y, dim.x * scale.x, dim.y * scale.y, density);
+    }
 
     /**
      * Create a Box2D Box Body.
@@ -63,5 +66,4 @@ public class BoxWorldBody extends WorldBody {
 
         return body;
     }
-
 }

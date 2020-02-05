@@ -1,30 +1,22 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.game.framework.bodies.BoxWorldBody;
-import com.game.framework.bodies.Function;
-import com.game.framework.bodies.WorldBody;
-import com.game.framework.bodies.joints.Weld;
-import com.game.framework.bodies.update.InputAdapterMethods;
-import com.game.framework.bodies.update.UpdateMethods;
-import com.game.framework.renderer.WorldBodyAnimation;
-import com.game.framework.renderer.WorldRenderer;
-import com.game.framework.world.WorldManager;
+import com.game.framework.character.Character;
+import com.game.framework.core.bodies.Function;
+import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core.bodies.joints.Weld;
+import com.game.framework.core.bodies.update.UpdateMethods;
+import com.game.framework.core.renderer.WorldBodyAnimation;
+import com.game.framework.core.renderer.WorldRenderer;
+import com.game.framework.core.world.WorldManager;
+import com.mygdx.game.characters.Samurai;
+import com.mygdx.game.characters.SamuraiCharacter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 
 public class MyGdxGame extends ApplicationAdapter {
 	WorldManager worldManager;
@@ -51,16 +43,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		//box.setInputAdapter(InputAdapterMethods.wasdInputAdapter(3f));
 		box.runAnimation(new WorldBodyAnimation("samurai/idle/samurai_idle_front_1_64.png"));
 
-		samurai = buildSamurai();
+		//samurai = new Samurai(worldManager);
+		samurai = new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(0.5f, 0.5f));
 
-//		samurai.setFrames(1f / 4f,
-//			"samurai/idle/samurai_idle_front_1_64.png",
-//			"samurai/idle/samurai_idle_front_2_64.png",
-//			"samurai/idle/samurai_idle_front_3_64.png",
-//			"samurai/idle/samurai_idle_front_4_64.png"
-//		);
-
-		//samurai.setImage("samurai/idle/samurai_idle_front_1_64.png");
 		samurai.setUpdate(UpdateMethods.wasdMovement(3f));
 
 		worldManager.createBox(BodyDef.BodyType.StaticBody, false, -2.5f, 0f, 0.01f, 5f, 1);
@@ -76,6 +61,21 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		if (Gdx.input.isKeyPressed(Input.Keys.R)) {
 			worldManager.createBox(BodyDef.BodyType.DynamicBody, false, 0, 0, 0.05f, 0.05f, 1);
+			new Samurai(worldManager);
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+			samurai.getBody().setAngularVelocity(-3f);
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+			samurai.getBody().setAngularVelocity(3f);
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			worldRenderer.moveBy(new Vector2(1f / 20f, 0f));
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			worldRenderer.moveBy(new Vector2(-1f / 20f, 0f));
 		}
 
 		worldManager.updatePhysics(1f / 60f);
@@ -100,7 +100,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private WorldBody buildSamurai() {
 		final WorldBody samurai = worldManager.createCustom(
 				BodyDef.BodyType.DynamicBody,
-				"samurai/idle1", 0f, 0f, 0.51f, 1);
+				"samurai/idle1", 0f, 0f, new Vector2(0.5f, 0.5f), 1);
 
 		samurai.setWorldPos(new Vector2(1.1f, 1.5f));
 
@@ -151,37 +151,27 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		samurai.runAnimation(samuraiIdle);
 
-		samurai.beginCollision(new Function<WorldBody, Void>() {
-			@Override
-			public Void call(WorldBody worldBody) {
+		samurai.beginCollision((WorldBody worldBody) -> {
 //				if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
 //					worldManager.remove(worldBody);
-				return null;
-			}
+			return null;
 		});
 
-		samurai.setInputAdapter(new Function<WorldBody, InputAdapter>() {
-			@Override
-			public InputAdapter call(final WorldBody worldBody) {
-				return new InputAdapter() {
-					@Override
-					public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		samurai.setInputAdapter((WorldBody worldBody) ->
+			new InputAdapter() {
+				@Override
+				public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 					for (String id : toRemove)
 						worldManager.remove(id);
-					worldBody.runAnimation(samuraiAttack, new Function<Void, Void>() {
-						@Override
-						public Void call(Void aVoid) {
+					worldBody.runAnimation(samuraiAttack, aVoid -> {
 						for (String id : toRemove)
 							worldManager.remove(id);
 						worldBody.runAnimation(samuraiIdle);
 						return null;
-						}
 					});
 					return true;
-					}
-				};
-			}
-		});
+				}
+			});
 
 		return samurai;
 	}

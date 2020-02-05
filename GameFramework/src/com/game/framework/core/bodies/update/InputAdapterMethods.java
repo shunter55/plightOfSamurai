@@ -1,10 +1,9 @@
-package com.game.framework.bodies.update;
+package com.game.framework.core.bodies.update;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.physics.box2d.World;
-import com.game.framework.bodies.Function;
-import com.game.framework.bodies.WorldBody;
+import com.game.framework.core.bodies.Function;
+import com.game.framework.core.bodies.WorldBody;
 
 public class InputAdapterMethods {
 

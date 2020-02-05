@@ -1,25 +1,21 @@
-package com.game.framework.bodies;
+package com.game.framework.core.bodies;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.game.framework.renderer.Renderable;
-import com.game.framework.world.WorldManager;
+import com.game.framework.core.world.WorldManager;
 
-public class CustomWorldBody extends WorldBody implements Renderable {
+public class CustomWorldBody extends WorldBody {
 
     private Vector2 dimensions;
     private Vector2 origin;
+    private String shapePath;
 
-    public CustomWorldBody(WorldManager world, String id, String shapePath, BodyDef.BodyType type, float x, float y, float scale, float density) {
+    public CustomWorldBody(WorldManager world, String id, String shapePath, BodyDef.BodyType type, float x, float y, Vector2 scale, float density) {
         super(world, id, createCustom(world.getWorld(), type, shapePath, x, y, scale, density));
 
-        this.dimensions = new Vector2(scale, scale);
+        this.dimensions = scale;
+        this.shapePath = shapePath;
 
         BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal(shapePath));
         this.origin = loader.getOrigin("Name", scale);
@@ -36,9 +32,11 @@ public class CustomWorldBody extends WorldBody implements Renderable {
     }
 
     @Override
-    public void dispose() {}
+    public Body copyBody(BodyDef.BodyType type, boolean isSensor, Vector2 pos, Vector2 dim, Vector2 scale, float density) {
+        return createCustom(getWorld().getWorld(), type, shapePath, pos.x, pos.y, dim.scl(scale), density);
+    }
 
-    private static Body createCustom(World world, BodyDef.BodyType type, String shapePath, float x, float y, float scale, float density) {
+    private static Body createCustom(World world, BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density) {
         BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal(shapePath));
 
         // body definition
@@ -59,5 +57,4 @@ public class CustomWorldBody extends WorldBody implements Renderable {
 
         return body;
     }
-
 }
