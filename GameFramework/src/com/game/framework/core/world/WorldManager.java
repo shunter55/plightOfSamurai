@@ -89,7 +89,6 @@ public class WorldManager {
     }
 
     public void addBody(WorldBody body) {
-        System.out.println("addBody");
         worldBodies.put(body.getId(), body);
     }
 

@@ -81,7 +81,7 @@ public class WorldRenderer {
         Vector2 origin = new Vector2(renderable.getOrigin().x, renderable.getOrigin().y);
         if (animation.flipHorizontal) {
             origin.x = Math.abs(renderable.getDimensions().x) - renderable.getOrigin().x;
-            origin.y = Math.abs(renderable.getDimensions().y) - renderable.getOrigin().y;
+        //    origin.y = Math.abs(renderable.getDimensions().y) - renderable.getOrigin().y;
         }
 
         // Image width and height in terms of World Coordinates.

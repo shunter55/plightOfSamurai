@@ -33,8 +33,11 @@ public abstract class WorldBody implements Renderable, Collidable {
     private List<Joint> joints;
 
     // Flip
-    private boolean isFlippedX = false;
-    private boolean isFlippedY = false;
+    public boolean isFlippedX = false;
+    public boolean isFlippedY = false;
+
+    // When destroyed
+    public Function<WorldBody, Void> _onDispose = null;
 
     // Unique identifier in WorldManager
     private String id;
@@ -117,6 +120,11 @@ public abstract class WorldBody implements Renderable, Collidable {
             this.body = copyBody(type, isSensor, pos, dim, scale, density);
             this.body.setUserData(this);
             world.addBody(this);
+            System.out.println("joints: " + joints.size());
+            for (Joint joint : joints) {
+                joint.buildOn(this);
+            }
+            System.out.println("fin");
             return null;
         });
     }
@@ -226,10 +234,23 @@ public abstract class WorldBody implements Renderable, Collidable {
         joints.add(joint);
     }
 
-    public void dispose() {
+    public void disposeJoints() {
         for (Joint joint : joints) {
             joint.dispose();
         }
+    }
+
+    public void onDispose(Function<WorldBody, Void> fn) {
+        this._onDispose = fn;
+    }
+
+    public void dispose() {
+//        if (_onDispose != null)
+//            _onDispose.call(this);
+
+        world.remove(this);
+
+        disposeJoints();
     }
 
 }

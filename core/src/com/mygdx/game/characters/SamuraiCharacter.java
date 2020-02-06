@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.character.Character;
+import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.world.WorldManager;
@@ -23,19 +24,19 @@ public class SamuraiCharacter extends Character {
 
         addAnimations();
 
-//        attachBoxSensor(
-//                new Vector2(0.18f, -0.09f),
-//                new Vector2(0.15f, 0.17f),
-//                worldBody -> {
-//                    if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody &&
-//                            !worldBody.getBody().getFixtureList().first().isSensor())
-//                        toRemove.add(worldBody.getId());
-//                    return null;
-//                },
-//                worldBody -> {
-//                    toRemove.remove(worldBody.getId());
-//                    return null;
-//                });
+        attachBoxSensor(
+                new Vector2(0.18f, -0.09f),
+                new Vector2(0.15f, 0.17f),
+                worldBody -> {
+                    if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody &&
+                            !worldBody.getBody().getFixtureList().first().isSensor())
+                        toRemove.add(worldBody.getId());
+                    return null;
+                },
+                worldBody -> {
+                    toRemove.remove(worldBody.getId());
+                    return null;
+                });
 
         addInputAdapter(world);
     }
@@ -80,14 +81,12 @@ public class SamuraiCharacter extends Character {
                 @Override
                 public boolean mouseMoved(int screenX, int screenY) {
                     if (screenX < Gdx.graphics.getWidth() / 2 && facingRight) {
-                        flipY();
+                        flipX();
                         facingRight = !facingRight;
-                        //setDefaultAnimation("idle_left");
                     }
                     else if (screenX > Gdx.graphics.getWidth() / 2 && !facingRight) {
-                        flipY();
+                        flipX();
                         facingRight = !facingRight;
-                        //setDefaultAnimation("idle");
                     }
                     return true;
                 }
