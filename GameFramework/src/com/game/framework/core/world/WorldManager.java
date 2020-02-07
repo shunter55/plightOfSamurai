@@ -6,6 +6,7 @@ import com.game.framework.core.bodies.BoxWorldBody;
 import com.game.framework.core.bodies.CustomWorldBody;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core.bodies.builders.WorldBodyBuilder;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -44,6 +45,7 @@ public class WorldManager {
      * @param timeStep The amount of time to simulate.
      */
     public void updatePhysics(float timeStep) {
+        System.out.println(worldBodies.keySet());
         world.step(timeStep, 6, 2);
 
         for (WorldBody body : worldBodies.values()) {
@@ -106,15 +108,21 @@ public class WorldManager {
      * @param density
      * @return
      */
-    public WorldBody createBox(BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density) {
-        BoxWorldBody body = new BoxWorldBody(this, generateId(), type, isSensor, x, y, width, height, density);
-        addBody(body);
+    public WorldBody createBox(BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, Vector2 scale, float density) {
+        BoxWorldBody body = new BoxWorldBody(this, generateId(), type, isSensor, x, y, width, height, scale, density);
+        //addBody(body);
         return body;
     }
 
     public WorldBody createCustom(BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density) {
         CustomWorldBody body = new CustomWorldBody(this, generateId(), shapePath, type, x, y, scale, density);
-        addBody(body);
+        //addBody(body);
+        return body;
+    }
+
+    public WorldBody createWorldBody(WorldBodyBuilder builder) {
+        WorldBody body = builder.build();
+        //addBody(body);
         return body;
     }
 
@@ -134,6 +142,12 @@ public class WorldManager {
             world.destroyBody(body.getKey().getBody());
             worldBodies.remove(body.getKey().getId());
             body.getKey().dispose();
+        }
+
+        if (!bodiesToDestroy.isEmpty())
+            destroyBodies();
+
+        for (Pair<WorldBody, Function<Void, Void>> body : toDestroy) {
             if (body.getValue() != null)
                 body.getValue().call(null);
         }

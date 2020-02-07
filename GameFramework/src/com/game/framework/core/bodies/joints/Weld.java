@@ -6,39 +6,35 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core.bodies.builders.WorldBodyBuilder;
 
 public class Weld implements Joint {
 
-    private Function<Void, WorldBody> bodyFn;
+    private WorldBodyBuilder builder;
     private Vector2 offset;
     private float offsetAngle;
 
     private WorldBody bodyB = null;
 
-    public Weld(Function<Void, WorldBody> bodyFn, Vector2 offset, float offsetAngle) {
-        this.bodyFn = bodyFn;
+    public Weld(WorldBodyBuilder builder, Vector2 offset, float offsetAngle) {
+        this.builder = builder;
         this.offset = offset;
         this.offsetAngle = offsetAngle;
     }
 
     public void buildOn(WorldBody body) {
-        System.out.println("buildOn A");
         World world = body.getWorld().getWorld();
 
         WeldJointDef weld = new WeldJointDef();
-        System.out.println("buildOn B");
 
-        bodyB = bodyFn.call(null);
-        System.out.println("buildOn C");
-
-
-//        if (body.isFlippedX)
-//            bodyB.flipX();
+        if (body.isFlippedX)
+            builder.scaleX(Math.abs(builder._scale.x));
+        else
+            builder.scaleX(Math.abs(builder._scale.x));
 //        if (body.isFlippedY)
-//            bodyB.flipY();
+//            builder.scaleY(-1 * builder._scale.y);
 
-        System.out.println("buildOn D");
-
+        bodyB = builder.build();
 
         Vector2 offset = new Vector2(
             body.isFlippedX ? -this.offset.x : this.offset.x,
@@ -51,8 +47,11 @@ public class Weld implements Joint {
         weld.initialize(body.getBody(), bodyB.getBody(), body.getWorldPos());
 
         world.createJoint(weld);
-        System.out.println("buildOn E");
+    }
 
+    @Override
+    public WorldBody getBody() {
+        return bodyB;
     }
 
     public void dispose() {

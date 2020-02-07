@@ -6,6 +6,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.game.framework.core.bodies.CustomWorldBody;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core.bodies.builders.BoxBuilder;
+import com.game.framework.core.bodies.builders.WorldBodyBuilder;
 import com.game.framework.core.bodies.joints.Weld;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.world.WorldManager;
@@ -139,25 +141,11 @@ public class Character extends CustomWorldBody {
                                 Vector2 size,
                                 Function<WorldBody, Void> beginCollision,
                                 Function<WorldBody, Void> endCollision) {
-        this.attachJoint(new Weld(aVoid -> {
-            WorldBody body = world.createBox(
-                BodyDef.BodyType.DynamicBody,
-                true,
-                this.getWorldPos().x, this.getWorldPos().y,
-                size.x, size.y,
-                0.000000001f);
 
-            if (beginCollision != null) {
-                body.beginCollision(beginCollision);
-            }
-            if (endCollision != null) {
-                body.endCollision(endCollision);
-            }
+        BoxBuilder builder = new BoxBuilder(getWorld()).pos(getWorldPos()).size(size).density(0.000000001f).isSensor(true)
+                .beginCollision(beginCollision).endCollision(endCollision);
 
-            return body;
-        },
-        pos,
-        0f));
+        this.attachJoint(new Weld(builder, pos, 0f));
     }
 
 

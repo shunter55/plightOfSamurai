@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.game.framework.core.bodies.CustomWorldBody;
 import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core.bodies.builders.BoxBuilder;
 import com.game.framework.core.bodies.joints.Weld;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.world.WorldManager;
@@ -34,33 +35,20 @@ public class Samurai extends CustomWorldBody {
             "samurai/attack/samurai_attack_3_64.png",
             "samurai/attack/samurai_attack_4_64.png");
 
-        this.attachJoint(new Weld(aVoid -> {
-            WorldBody body = worldManager.createBox(
-                BodyDef.BodyType.DynamicBody,
-                true,
-                this.getWorldPos().x, this.getWorldPos().y,
-                0.15f, 0.17f,
-                0.000001f);
-
-            PolygonShape s = new PolygonShape();
-            s.setAsBox(0.5f, 0.5f);
-
-            body.beginCollision(worldBody -> {
-                if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody &&
-                    !worldBody.getBody().getFixtureList().first().isSensor())
-                    toRemove.add(worldBody.getId());
-                return null;
-            });
-
-            body.endCollision(worldBody -> {
-                toRemove.remove(worldBody.getId());
-                return null;
-            });
-
-            return body;
-        },
-        new Vector2(0.18f, -0.09f),
-        0f));
+        this.attachJoint(new Weld(
+            new BoxBuilder(worldManager).isSensor(true).pos(getWorldPos()).width(0.15f).height(0.15f).density(0.0000001f)
+                .beginCollision(worldBody -> {
+                    if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody &&
+                            !worldBody.getBody().getFixtureList().first().isSensor())
+                        toRemove.add(worldBody.getId());
+                    return null;
+                })
+                .endCollision(worldBody -> {
+                    toRemove.remove(worldBody.getId());
+                    return null;
+                }),
+            new Vector2(0.18f, -0.09f),
+            0f));
 
         this.runAnimation(samuraiIdle);
 

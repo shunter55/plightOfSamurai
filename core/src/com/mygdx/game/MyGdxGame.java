@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.character.Character;
+import com.game.framework.core.bodies.BoxWorldBody;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core.bodies.builders.BoxBuilder;
 import com.game.framework.core.bodies.joints.Weld;
 import com.game.framework.core.bodies.update.UpdateMethods;
 import com.game.framework.core.renderer.WorldBodyAnimation;
@@ -35,35 +37,37 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		worldManager = new WorldManager();
-
 		worldRenderer = new WorldRenderer(WorldRenderer.CameraMode.Stretch, worldSize.x, worldSize.y);
 
-		WorldBody box = worldManager.createBox(BodyDef.BodyType.DynamicBody, false, -2.4f, -2.4f, 0.1f, 0.1f, 1);
-		//box.setUpdate(UpdateMethods.wasdMovement(3f));
-		//box.setInputAdapter(InputAdapterMethods.wasdInputAdapter(3f));
+		// Box
+		WorldBody box = new BoxBuilder(worldManager).pos(-2.4f, -2.4f).size(0.1f, 0.1f).scaleX(-1f).build();
 		box.runAnimation(new WorldBodyAnimation("samurai/idle/samurai_idle_front_1_64.png"));
 
-		//samurai = new Samurai(worldManager);
+		// Character
 		samurai = new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(0.5f, 0.5f));
-
 		samurai.setUpdate(UpdateMethods.wasdMovement(3f));
 
-		worldManager.createBox(BodyDef.BodyType.StaticBody, false, -2.5f, 0f, 0.01f, 5f, 1);
-		worldManager.createBox(BodyDef.BodyType.StaticBody, false, 2.5f, 0f, 0.01f, 5f, 1);
-		worldManager.createBox(BodyDef.BodyType.StaticBody, false, 0f, -2.5f, 5f, 0.01f, 1);
-		worldManager.createBox(BodyDef.BodyType.StaticBody, false, 0f, 2.5f, 5f, 0.01f, 1);
+		// Walls
+		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(-2.5f, 0f).size(0.01f, 5f).build();
+		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(2.5f, 0f).size(0.01f, 5f).build();
+		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, -2.5f).size(5f, 0.1f).build();
+		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, 2.5f).size(5f, 0.1f).build();
+
 	}
 
 	@Override
 	public void render () {
+		// Background
 		Gdx.gl.glClearColor(0.25f, 0.25f, 0.25f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// Spawn
 		if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-			worldManager.createBox(BodyDef.BodyType.DynamicBody, false, 0, 0, 0.05f, 0.05f, 1);
-			new Samurai(worldManager);
+			new BoxBuilder(worldManager).size(0.05f, 0.05f).build();
+			//new Samurai(worldManager);
 		}
 
+		// Rotation
 		if (Gdx.input.isKeyPressed(Input.Keys.E)) {
 			samurai.getBody().setAngularVelocity(-3f);
 		}
@@ -71,6 +75,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			samurai.getBody().setAngularVelocity(3f);
 		}
 
+		// Camera Movement
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			worldRenderer.moveBy(new Vector2(1f / 20f, 0f));
 		}
@@ -78,10 +83,11 @@ public class MyGdxGame extends ApplicationAdapter {
 			worldRenderer.moveBy(new Vector2(-1f / 20f, 0f));
 		}
 
+		// Update the world.
 		worldManager.updatePhysics(1f / 60f);
 
+		// Render the world.
 		worldRenderer.render(worldManager);
-		//worldRenderer.renderAnimated(samurai);
 	}
 
 	@Override
@@ -116,36 +122,22 @@ public class MyGdxGame extends ApplicationAdapter {
 				"samurai/attack/samurai_attack_4_64.png");
 
 		samurai.attachJoint(new Weld(
-			new Function<Void, WorldBody>() {
-				@Override
-				public WorldBody call(Void aVoid) {
-					WorldBody body = worldManager.createBox(
-						BodyDef.BodyType.DynamicBody,
-						true,
-						samurai.getWorldPos().x, samurai.getWorldPos().y,
-						0.15f, 0.17f,
-						0.000001f);
-
-					body.beginCollision(new Function<WorldBody, Void>() {
-						@Override
-						public Void call(WorldBody worldBody) {
-							if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
-								toRemove.add(worldBody.getId());
-							return null;
-						}
-					});
-
-					body.endCollision(new Function<WorldBody, Void>() {
-						@Override
-						public Void call(WorldBody worldBody) {
-							toRemove.remove(worldBody.getId());
-							return null;
-						}
-					});
-
-					return body;
-				}
-			},
+			new BoxBuilder(worldManager).isSensor(true).pos(samurai.getWorldPos()).width(0.15f).height(0.17f).density(0.00000001f)
+				.beginCollision(new Function<WorldBody, Void>() {
+					@Override
+					public Void call(WorldBody worldBody) {
+						if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
+							toRemove.add(worldBody.getId());
+						return null;
+					}
+				})
+				.endCollision(new Function<WorldBody, Void>() {
+					@Override
+					public Void call(WorldBody worldBody) {
+						toRemove.remove(worldBody.getId());
+						return null;
+					}
+				}),
 			new Vector2(0.18f, -0.09f),
 			0f));
 

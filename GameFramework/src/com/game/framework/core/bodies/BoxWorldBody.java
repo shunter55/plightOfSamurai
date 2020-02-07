@@ -9,8 +9,8 @@ public class BoxWorldBody extends WorldBody {
     private Vector2 dimensions;
     private Vector2 origin;
 
-    public BoxWorldBody(WorldManager world, String id, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density) {
-        super(world, id, createBox(world.getWorld(), type, isSensor, x, y, width, height, density));
+    public BoxWorldBody(WorldManager world, String id, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, Vector2 scale, float density) {
+        super(world, id, createBox(world.getWorld(), type, isSensor, x, y, width * Math.abs(scale.x), height * Math.abs(scale.y), density));
 
         dimensions = new Vector2(width, height);
         origin = new Vector2(width / 2, height / 2);
@@ -28,7 +28,7 @@ public class BoxWorldBody extends WorldBody {
 
     @Override
     public Body copyBody(BodyDef.BodyType type, boolean isSensor, Vector2 pos, Vector2 dim, Vector2 scale, float density) {
-        return createBox(getWorld().getWorld(), type, isSensor, pos.x, pos.y, dim.x * scale.x, dim.y * scale.y, density);
+        return createBox(getWorld().getWorld(), type, isSensor, pos.x, pos.y, dim.x * Math.abs(scale.x), dim.y * Math.abs(scale.y), density);
     }
 
     /**

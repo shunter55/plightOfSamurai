@@ -44,7 +44,7 @@ public abstract class WorldBody implements Renderable, Collidable {
     // Update function that will be called when the World updates.
     private Function<WorldBody, Void> updateFn;
 
-    WorldBody(WorldManager world, String id, Body body) {
+    protected WorldBody(WorldManager world, String id, Body body) {
         this.world = world;
         this.body = body;
 
@@ -53,6 +53,8 @@ public abstract class WorldBody implements Renderable, Collidable {
         this.id = id;
 
         this.body.setUserData(this);
+
+        world.addBody(this);
     }
 
     /**
@@ -120,13 +122,18 @@ public abstract class WorldBody implements Renderable, Collidable {
             this.body = copyBody(type, isSensor, pos, dim, scale, density);
             this.body.setUserData(this);
             world.addBody(this);
-            System.out.println("joints: " + joints.size());
             for (Joint joint : joints) {
                 joint.buildOn(this);
             }
-            System.out.println("fin");
             return null;
         });
+
+//        for (Joint joint : joints) {
+//            world.remove(joint.getBody(), aVoid -> {
+//               joint.getBody().rebuildBody(scale);
+//               return null;
+//            });
+//        }
     }
 
     public abstract Body copyBody(BodyDef.BodyType type, boolean isSensor, Vector2 pos, Vector2 dim, Vector2 scale, float density);
@@ -244,13 +251,16 @@ public abstract class WorldBody implements Renderable, Collidable {
         this._onDispose = fn;
     }
 
-    public void dispose() {
-//        if (_onDispose != null)
-//            _onDispose.call(this);
-
+    /**
+     * Deletes the WorldBody from the world.
+     */
+    public void destroy() {
         world.remove(this);
+    }
 
-        disposeJoints();
+    public void dispose() {
+        if (_onDispose != null)
+            _onDispose.call(this);
     }
 
 }

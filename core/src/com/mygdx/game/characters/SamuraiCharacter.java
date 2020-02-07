@@ -25,20 +25,25 @@ public class SamuraiCharacter extends Character {
         addAnimations();
 
         attachBoxSensor(
-                new Vector2(0.18f, -0.09f),
-                new Vector2(0.15f, 0.17f),
-                worldBody -> {
-                    if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody &&
-                            !worldBody.getBody().getFixtureList().first().isSensor())
-                        toRemove.add(worldBody.getId());
-                    return null;
-                },
-                worldBody -> {
-                    toRemove.remove(worldBody.getId());
-                    return null;
-                });
+            new Vector2(0.18f, -0.09f),
+            new Vector2(0.15f, 0.17f),
+            worldBody -> {
+                if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody &&
+                        !worldBody.getBody().getFixtureList().first().isSensor())
+                    toRemove.add(worldBody.getId());
+                return null;
+            },
+            worldBody -> {
+                toRemove.remove(worldBody.getId());
+                return null;
+            });
 
         addInputAdapter(world);
+
+        onDispose(aVoid -> {
+            disposeJoints();
+            return null;
+        });
     }
 
     private void addAnimations() {
