@@ -98,34 +98,6 @@ public class WorldManager {
         return worldBodies.get(id);
     }
 
-    /**
-     * Add a Box object to the World.
-     * @param type
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @param density
-     * @return
-     */
-    public WorldBody createBox(BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, Vector2 scale, float density) {
-        BoxWorldBody body = new BoxWorldBody(this, generateId(), type, isSensor, x, y, width, height, scale, density);
-        //addBody(body);
-        return body;
-    }
-
-    public WorldBody createCustom(BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density) {
-        CustomWorldBody body = new CustomWorldBody(this, generateId(), shapePath, type, x, y, scale, density);
-        //addBody(body);
-        return body;
-    }
-
-    public WorldBody createWorldBody(WorldBodyBuilder builder) {
-        WorldBody body = builder.build();
-        //addBody(body);
-        return body;
-    }
-
     public Iterable<WorldBody> getBodies() {
         return worldBodies.values();
     }

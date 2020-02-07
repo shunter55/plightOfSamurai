@@ -27,12 +27,17 @@ public class Weld implements Joint {
 
         WeldJointDef weld = new WeldJointDef();
 
+        if (bodyB != null)
+            builder.id(bodyB.getId());
+
         if (body.isFlippedX)
-            builder.scaleX(Math.abs(builder._scale.x));
+            builder.scaleX(-Math.abs(builder._scale.x));
         else
             builder.scaleX(Math.abs(builder._scale.x));
-//        if (body.isFlippedY)
-//            builder.scaleY(-1 * builder._scale.y);
+        if (body.isFlippedY)
+            builder.scaleY(-Math.abs(builder._scale.y));
+        else
+            builder.scaleY(Math.abs(builder._scale.y));
 
         bodyB = builder.build();
 

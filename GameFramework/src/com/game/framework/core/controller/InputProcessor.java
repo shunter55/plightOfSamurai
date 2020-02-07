@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.game.framework.core.bodies.WorldBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +30,16 @@ public class InputProcessor {
         inputAdapters.put(body.getId(), input);
     }
 
+    public void removeInput(WorldBody body) {
+        inputAdapters.remove(body.getId());
+    }
+
     public InputAdapter getInput(WorldBody body) {
         return inputAdapters.get(body.getId());
     }
 
     public Iterable<InputAdapter> getInputs() {
-        return inputAdapters.values();
+        return new ArrayList(inputAdapters.values());
     }
 
     private static void init() {

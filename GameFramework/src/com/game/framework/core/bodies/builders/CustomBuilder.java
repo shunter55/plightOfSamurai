@@ -10,7 +10,6 @@ import com.game.framework.core.world.WorldManager;
 public class CustomBuilder extends WorldBodyBuilder {
 
     private WorldManager _world;
-    private String _id = null;
     private String _shapePath = null;
     private BodyDef.BodyType _type = BodyDef.BodyType.DynamicBody;
     private Vector2 _pos = new Vector2(0, 0);
@@ -36,7 +35,7 @@ public class CustomBuilder extends WorldBodyBuilder {
     }
 
     public CustomBuilder id(String id) {
-        this._id = id;
+        super.id(id);
         return this;
     }
 

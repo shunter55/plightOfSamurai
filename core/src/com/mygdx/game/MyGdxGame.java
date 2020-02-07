@@ -64,7 +64,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// Spawn
 		if (Gdx.input.isKeyPressed(Input.Keys.R)) {
 			new BoxBuilder(worldManager).size(0.05f, 0.05f).build();
-			//new Samurai(worldManager);
+			new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(1, 1));
 		}
 
 		// Rotation
@@ -103,68 +103,68 @@ public class MyGdxGame extends ApplicationAdapter {
 		worldRenderer = new WorldRenderer(WorldRenderer.CameraMode.Zoom, worldSize.x, worldSize.y);
 	}
 
-	private WorldBody buildSamurai() {
-		final WorldBody samurai = worldManager.createCustom(
-				BodyDef.BodyType.DynamicBody,
-				"samurai/idle1", 0f, 0f, new Vector2(0.5f, 0.5f), 1);
-
-		samurai.setWorldPos(new Vector2(1.1f, 1.5f));
-
-		samuraiIdle = new WorldBodyAnimation(1f / 4f,
-				"samurai/idle/samurai_idle_front_1_64.png",
-				"samurai/idle/samurai_idle_front_2_64.png",
-				"samurai/idle/samurai_idle_front_3_64.png",
-				"samurai/idle/samurai_idle_front_4_64.png");
-		samuraiAttack = new WorldBodyAnimation(1f / 16f,
-				"samurai/attack/samurai_attack_1_64.png",
-				"samurai/attack/samurai_attack_2_64.png",
-				"samurai/attack/samurai_attack_3_64.png",
-				"samurai/attack/samurai_attack_4_64.png");
-
-		samurai.attachJoint(new Weld(
-			new BoxBuilder(worldManager).isSensor(true).pos(samurai.getWorldPos()).width(0.15f).height(0.17f).density(0.00000001f)
-				.beginCollision(new Function<WorldBody, Void>() {
-					@Override
-					public Void call(WorldBody worldBody) {
-						if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
-							toRemove.add(worldBody.getId());
-						return null;
-					}
-				})
-				.endCollision(new Function<WorldBody, Void>() {
-					@Override
-					public Void call(WorldBody worldBody) {
-						toRemove.remove(worldBody.getId());
-						return null;
-					}
-				}),
-			new Vector2(0.18f, -0.09f),
-			0f));
-
-		samurai.runAnimation(samuraiIdle);
-
-		samurai.beginCollision((WorldBody worldBody) -> {
-//				if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
-//					worldManager.remove(worldBody);
-			return null;
-		});
-
-		samurai.setInputAdapter((WorldBody worldBody) ->
-			new InputAdapter() {
-				@Override
-				public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-					for (String id : toRemove)
-						worldManager.remove(id);
-					worldBody.runAnimation(samuraiAttack, aVoid -> {
-						for (String id : toRemove)
-							worldManager.remove(id);
-						worldBody.runAnimation(samuraiIdle);
-						return null;
-					});
-					return true;
-				}
-			});
-
-		return samurai;
-	}
+//	private WorldBody buildSamurai() {
+//		final WorldBody samurai = worldManager.createCustom(
+//				BodyDef.BodyType.DynamicBody,
+//				"samurai/idle1", 0f, 0f, new Vector2(0.5f, 0.5f), 1);
+//
+//		samurai.setWorldPos(new Vector2(1.1f, 1.5f));
+//
+//		samuraiIdle = new WorldBodyAnimation(1f / 4f,
+//				"samurai/idle/samurai_idle_front_1_64.png",
+//				"samurai/idle/samurai_idle_front_2_64.png",
+//				"samurai/idle/samurai_idle_front_3_64.png",
+//				"samurai/idle/samurai_idle_front_4_64.png");
+//		samuraiAttack = new WorldBodyAnimation(1f / 16f,
+//				"samurai/attack/samurai_attack_1_64.png",
+//				"samurai/attack/samurai_attack_2_64.png",
+//				"samurai/attack/samurai_attack_3_64.png",
+//				"samurai/attack/samurai_attack_4_64.png");
+//
+//		samurai.attachJoint(new Weld(
+//			new BoxBuilder(worldManager).isSensor(true).pos(samurai.getWorldPos()).width(0.15f).height(0.17f).density(0.00000001f)
+//				.beginCollision(new Function<WorldBody, Void>() {
+//					@Override
+//					public Void call(WorldBody worldBody) {
+//						if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
+//							toRemove.add(worldBody.getId());
+//						return null;
+//					}
+//				})
+//				.endCollision(new Function<WorldBody, Void>() {
+//					@Override
+//					public Void call(WorldBody worldBody) {
+//						toRemove.remove(worldBody.getId());
+//						return null;
+//					}
+//				}),
+//			new Vector2(0.18f, -0.09f),
+//			0f));
+//
+//		samurai.runAnimation(samuraiIdle);
+//
+//		samurai.beginCollision((WorldBody worldBody) -> {
+////				if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody)
+////					worldManager.remove(worldBody);
+//			return null;
+//		});
+//
+//		samurai.setInputAdapter((WorldBody worldBody) ->
+//			new InputAdapter() {
+//				@Override
+//				public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+//					for (String id : toRemove)
+//						worldManager.remove(id);
+//					worldBody.runAnimation(samuraiAttack, aVoid -> {
+//						for (String id : toRemove)
+//							worldManager.remove(id);
+//						worldBody.runAnimation(samuraiIdle);
+//						return null;
+//					});
+//					return true;
+//				}
+//			});
+//
+//		return samurai;
+//	}
 }

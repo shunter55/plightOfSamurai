@@ -10,12 +10,14 @@ import com.game.framework.core.bodies.WorldBody;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.world.WorldManager;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SamuraiCharacter extends Character {
 
-    private Set<String> toRemove = new HashSet<>();
+    private Map<String, WorldBody> toRemove = new HashMap<>();
 
     private boolean facingRight = true;
 
@@ -30,7 +32,7 @@ public class SamuraiCharacter extends Character {
             worldBody -> {
                 if (worldBody.getBody().getType() == BodyDef.BodyType.DynamicBody &&
                         !worldBody.getBody().getFixtureList().first().isSensor())
-                    toRemove.add(worldBody.getId());
+                    toRemove.put(worldBody.getId(), worldBody);
                 return null;
             },
             worldBody -> {
@@ -47,7 +49,6 @@ public class SamuraiCharacter extends Character {
     }
 
     private void addAnimations() {
-
         WorldBodyAnimation idle = new WorldBodyAnimation(1f / 4f,
                 "samurai/idle/samurai_idle_front_1_64.png",
                 "samurai/idle/samurai_idle_front_2_64.png",
@@ -72,12 +73,16 @@ public class SamuraiCharacter extends Character {
             new InputAdapter() {
                 @Override
                 public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                    for (String id : toRemove)
-                        world.remove(id);
+                    // Destroy bodies at begining of click.
+                    for (WorldBody body : toRemove.values())
+                        body.destroy();
+
+                    // Run attack animation.
                     runAnimation("attack", aNull -> {
+                        // Destroy bodies at end of attack animation.
                         System.out.println("done");
-                        for (String id : toRemove)
-                            world.remove(id);
+                        for (WorldBody body : toRemove.values())
+                            body.destroy();
                         return null;
                     });
                     return true;

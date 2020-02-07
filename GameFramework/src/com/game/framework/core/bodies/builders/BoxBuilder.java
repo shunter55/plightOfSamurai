@@ -10,7 +10,6 @@ import com.game.framework.core.world.WorldManager;
 public class BoxBuilder extends WorldBodyBuilder {
 
     private WorldManager _world;
-    private String _id = null;
     private BodyDef.BodyType _type = BodyDef.BodyType.DynamicBody;
     private boolean _isSensor = false;
     private Vector2 _pos = new Vector2(0, 0);
@@ -38,7 +37,7 @@ public class BoxBuilder extends WorldBodyBuilder {
     }
 
     public BoxBuilder id(String id) {
-        this._id = id;
+        super.id(id);
         return this;
     }
 

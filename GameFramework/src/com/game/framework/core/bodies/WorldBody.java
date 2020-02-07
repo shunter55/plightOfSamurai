@@ -256,6 +256,7 @@ public abstract class WorldBody implements Renderable, Collidable {
      */
     public void destroy() {
         world.remove(this);
+        InputProcessor.getInputProcessor().removeInput(this);
     }
 
     public void dispose() {

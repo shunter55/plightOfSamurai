@@ -7,6 +7,7 @@ import com.game.framework.core.bodies.WorldBody;
 public abstract class WorldBodyBuilder {
 
     public Vector2 _scale = new Vector2(1, 1);
+    protected String _id = null;
     protected Function<WorldBody, Void> _beginCollision, _endCollision;
 
     public abstract WorldBody build();
@@ -15,6 +16,11 @@ public abstract class WorldBodyBuilder {
         body.beginCollision(_beginCollision);
         body.endCollision(_endCollision);
         return body;
+    }
+
+    public WorldBodyBuilder id(String id) {
+        this._id = id;
+        return this;
     }
 
     public WorldBodyBuilder scale(Vector2 scale) {
