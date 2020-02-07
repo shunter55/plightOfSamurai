@@ -112,9 +112,9 @@ public abstract class WorldBody implements Renderable, Collidable {
     }
 
     public void rebuildBody(Vector2 scale) {
-        BodyDef.BodyType type = body.getType();
+        BodyDef.BodyType type = BodyDef.BodyType.valueOf(body.getType().toString());
         boolean isSensor = body.getFixtureList().first().isSensor();
-        Vector2 pos = getWorldPos();
+        Vector2 pos = getWorldPos().cpy();
         Vector2 dim = getDimensions();
         float density = body.getFixtureList().first().getDensity();
 
