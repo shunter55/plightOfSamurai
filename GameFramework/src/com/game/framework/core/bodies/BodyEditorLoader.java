@@ -137,6 +137,27 @@ public class BodyEditorLoader {
         return vec.set(rbModel.origin).scl(scale);
     }
 
+    public Vector2 getDimensions(String name, Vector2 scale) {
+        RigidBodyModel rbModel = model.rigidBodies.get(name);
+        if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
+
+        float minX = 1000;
+        float maxX = -1000;
+        float minY = 1000;
+        float maxY = -1000;
+
+        for (PolygonModel p : rbModel.polygons) {
+            for (Vector2 vert : p.vertices) {
+                minX = Math.min(vert.x, minX);
+                maxX = Math.max(vert.x, maxX);
+                minY = Math.min(vert.y, minY);
+                maxY = Math.max(vert.y, maxY);
+            }
+        }
+
+        return new Vector2((maxX - minX) * scale.x, (maxY - minY) * scale.y);
+    }
+
     /**
      * <b>For advanced users only.</b> Lets you access the internal model of
      * this loader and modify it. Be aware that any modification is permanent

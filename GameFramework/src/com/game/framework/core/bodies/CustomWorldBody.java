@@ -14,11 +14,12 @@ public class CustomWorldBody extends WorldBody {
     public CustomWorldBody(WorldManager world, String id, String shapePath, BodyDef.BodyType type, float x, float y, Vector2 scale, float density) {
         super(world, id, createCustom(world.getWorld(), type, shapePath, x, y, scale, density));
 
-        this.dimensions = scale;
         this.shapePath = shapePath;
 
         BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal(shapePath));
-        this.origin = loader.getOrigin("Name", scale);
+
+        this.dimensions = scale;//loader.getDimensions("Name", scale);
+        this.origin = new Vector2(loader.getOrigin("Name", scale));
     }
 
     @Override

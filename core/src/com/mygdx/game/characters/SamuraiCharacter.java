@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.character.Character;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core.particles.Particle;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.world.WorldManager;
 
@@ -66,6 +67,10 @@ public class SamuraiCharacter extends Character {
         addAnimation("idle_left", new WorldBodyAnimation(idle).flipHorizontal());
 
         setDefaultAnimation("idle");
+
+        Particle particle = new Particle(this, "particle1.party", 0.005f);
+        //particle.setOffset(new Vector2(0f, -.13f));
+        attachParticle(particle);
     }
 
     private void addInputAdapter(WorldManager world) {

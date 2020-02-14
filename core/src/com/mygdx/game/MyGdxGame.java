@@ -11,6 +11,7 @@ import com.game.framework.core.bodies.WorldBody;
 import com.game.framework.core.bodies.builders.BoxBuilder;
 import com.game.framework.core.bodies.joints.Weld;
 import com.game.framework.core.bodies.update.UpdateMethods;
+import com.game.framework.core.particles.Particle;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.renderer.WorldRenderer;
 import com.game.framework.core.world.WorldManager;
@@ -52,7 +53,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(2.5f, 0f).size(0.01f, 5f).build();
 		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, -2.5f).size(5f, 0.1f).build();
 		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, 2.5f).size(5f, 0.1f).build();
-
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.game.framework.core.particles.Particle;
 import com.game.framework.core.utils.Utils;
 import com.game.framework.core.world.WorldManager;
 
@@ -14,7 +15,7 @@ public class WorldRenderer {
 
     private Camera camera;
 
-    private SpriteBatch spriteBatch;
+    public SpriteBatch spriteBatch;
     private Box2DDebugRenderer debugRenderer;
 
     public enum CameraMode {
@@ -107,8 +108,16 @@ public class WorldRenderer {
         // Draw the Image.
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
+        for (Particle particle : renderable.getParticles()) {
+            particle.getEffect().draw(spriteBatch);
+        }
         sprite.draw(spriteBatch);
         spriteBatch.end();
+
+        for (Particle particle : renderable.getParticles()) {
+            if (particle.isComplete())
+                particle.reset();
+        }
     }
 
     public void dispose() {

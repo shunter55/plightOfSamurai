@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.game.framework.core.bodies.joints.Joint;
 import com.game.framework.core.controller.InputProcessor;
+import com.game.framework.core.particles.Particle;
 import com.game.framework.core.renderer.Renderable;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.world.WorldManager;
@@ -32,6 +33,9 @@ public abstract class WorldBody implements Renderable, Collidable {
     // Joints
     private List<Joint> joints;
 
+    // Particles
+    private List<Particle> particles;
+
     // Flip
     public boolean isFlippedX = false;
     public boolean isFlippedY = false;
@@ -49,6 +53,7 @@ public abstract class WorldBody implements Renderable, Collidable {
         this.body = body;
 
         this.joints = new ArrayList<>();
+        this.particles = new ArrayList<>();
 
         this.id = id;
 
@@ -69,6 +74,15 @@ public abstract class WorldBody implements Renderable, Collidable {
                 throw new RuntimeException("Could not update " + this + ". " + e);
             }
         }
+
+        List<Particle> toRemove = new ArrayList<>();
+        for (Particle particle : particles) {
+            particle.update(elapsedTime);
+            if (particle.isComplete()) {
+                toRemove.add(particle);
+            }
+        }
+        particles.removeAll(toRemove);
 
         incrementTime(elapsedTime);
     }
@@ -127,13 +141,6 @@ public abstract class WorldBody implements Renderable, Collidable {
             }
             return null;
         });
-
-//        for (Joint joint : joints) {
-//            world.remove(joint.getBody(), aVoid -> {
-//               joint.getBody().rebuildBody(scale);
-//               return null;
-//            });
-//        }
     }
 
     public abstract Body copyBody(BodyDef.BodyType type, boolean isSensor, Vector2 pos, Vector2 dim, Vector2 scale, float density);
@@ -236,6 +243,7 @@ public abstract class WorldBody implements Renderable, Collidable {
 
     // ---------------------------------------------------------------------------------------------
 
+    // Joints --------------------------------------------------------------------------------------
     public void attachJoint(Joint joint) {
         joint.buildOn(this);
         joints.add(joint);
@@ -246,6 +254,18 @@ public abstract class WorldBody implements Renderable, Collidable {
             joint.dispose();
         }
     }
+    // ---------------------------------------------------------------------------------------------
+
+    // Particles -----------------------------------------------------------------------------------
+    public void attachParticle(Particle particle) {
+        this.particles.add(particle);
+    }
+
+    @Override
+    public List<Particle> getParticles() {
+        return particles;
+    }
+    // ---------------------------------------------------------------------------------------------
 
     public void onDispose(Function<WorldBody, Void> fn) {
         this._onDispose = fn;
