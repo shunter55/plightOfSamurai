@@ -37,7 +37,7 @@ public class CustomWorldBody extends WorldBody {
         return createCustom(getWorld().getWorld(), type, shapePath, pos.x, pos.y, dim.scl(scale), density);
     }
 
-    private static Body createCustom(World world, BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density) {
+    public static Body createCustom(World world, BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density) {
         BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal(shapePath));
 
         // body definition

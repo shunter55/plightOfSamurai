@@ -3,7 +3,7 @@ package com.game.framework.core.bodies.update;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.game.framework.core.bodies.Function;
-import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core2.bodies.WorldBody;
 
 public class UpdateMethods {
 
@@ -11,7 +11,7 @@ public class UpdateMethods {
         return new Function<WorldBody, Void>() {
             @Override
             public Void call(WorldBody body) {
-                body.getBody().setLinearVelocity(0f, 0f);
+                body.body.body.setLinearVelocity(0f, 0f);
 
                 float vel = speed;
 
@@ -20,19 +20,19 @@ public class UpdateMethods {
                 }
 
                 if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                    body.getBody().setLinearVelocity(-vel, body.getBody().getLinearVelocity().y);
+                    body.body.body.setLinearVelocity(-vel, body.body.body.getLinearVelocity().y);
                 }
 
                 if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                    body.getBody().setLinearVelocity(vel, body.getBody().getLinearVelocity().y);
+                    body.body.body.setLinearVelocity(vel, body.body.body.getLinearVelocity().y);
                 }
 
                 if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                    body.getBody().setLinearVelocity(body.getBody().getLinearVelocity().x, vel);
+                    body.body.body.setLinearVelocity(body.body.body.getLinearVelocity().x, vel);
                 }
 
                 if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    body.getBody().setLinearVelocity(body.getBody().getLinearVelocity().x, -vel);
+                    body.body.body.setLinearVelocity(body.body.body.getLinearVelocity().x, -vel);
                 }
 
                 return null;

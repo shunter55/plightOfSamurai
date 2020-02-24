@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core2.bodies.WorldBody;
 
 public class Particle {
 
@@ -27,7 +27,7 @@ public class Particle {
     }
 
     public void update(float deltaTime) {
-        particleEffect.setPosition(body.getWorldPos().x + offset.x, body.getWorldPos().y + offset.y);
+        particleEffect.setPosition(body.body.getWorldPos().x + offset.x, body.body.getWorldPos().y + offset.y);
         particleEffect.update(deltaTime);
     }
 

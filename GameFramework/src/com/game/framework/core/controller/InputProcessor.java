@@ -2,7 +2,7 @@ package com.game.framework.core.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core2.bodies.WorldBody;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,23 +19,21 @@ public class InputProcessor {
     }
 
     public static InputProcessor getInputProcessor() {
-        if (instance == null) {
-            init();
-        }
+        init();
 
         return instance;
     }
 
     public void addInput(WorldBody body, InputAdapter input) {
-        inputAdapters.put(body.getId(), input);
+        inputAdapters.put(body.id(), input);
     }
 
     public void removeInput(WorldBody body) {
-        inputAdapters.remove(body.getId());
+        inputAdapters.remove(body.id());
     }
 
     public InputAdapter getInput(WorldBody body) {
-        return inputAdapters.get(body.getId());
+        return inputAdapters.get(body.id());
     }
 
     public Iterable<InputAdapter> getInputs() {

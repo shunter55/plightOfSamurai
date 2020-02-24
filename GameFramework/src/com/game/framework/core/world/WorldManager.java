@@ -5,7 +5,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.game.framework.core.bodies.BoxWorldBody;
 import com.game.framework.core.bodies.CustomWorldBody;
 import com.game.framework.core.bodies.Function;
-import com.game.framework.core.bodies.WorldBody;
+import com.game.framework.core2.bodies.WorldBody;
+import com.game.framework.core.bodies.builders.BoxBuilder;
+import com.game.framework.core.bodies.builders.CustomBuilder;
 import com.game.framework.core.bodies.builders.WorldBodyBuilder;
 import javafx.util.Pair;
 
@@ -17,7 +19,7 @@ import java.util.*;
 public class WorldManager {
 
     private final World world;
-    private Map<String, WorldBody> worldBodies;
+    public Map<String, WorldBody> worldBodies;
 
     private int nextObjectId = 0;
 
@@ -40,12 +42,24 @@ public class WorldManager {
         world.setContactListener(getContactListener());
     }
 
+    // CREATE OBJECTS -------------------------------------------------------------------------------------------
+
+    public BoxBuilder boxBody() {
+        return new BoxBuilder(this);
+    }
+
+    public CustomBuilder customBody(String shapePath) {
+        return new CustomBuilder(this, shapePath);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------
+
+
     /**
      * Update the Worlds physics.
      * @param timeStep The amount of time to simulate.
      */
     public void updatePhysics(float timeStep) {
-        System.out.println(worldBodies.keySet());
         world.step(timeStep, 6, 2);
 
         for (WorldBody body : worldBodies.values()) {
@@ -75,11 +89,11 @@ public class WorldManager {
     }
 
     public WorldBody remove(WorldBody body) {
-        return remove(body.getId(), null);
+        return remove(body.id(), null);
     }
 
     public WorldBody remove(WorldBody body, Function<Void, Void> callback) {
-        return remove(body.getId(), callback);
+        return remove(body.id(), callback);
     }
 
     public void dispose() {
@@ -91,7 +105,9 @@ public class WorldManager {
     }
 
     public void addBody(WorldBody body) {
-        worldBodies.put(body.getId(), body);
+        if (body.id() == null)
+            throw new RuntimeException("Body Id cannot be null.");
+        worldBodies.put(body.id(), body);
     }
 
     public WorldBody getBody(String id) {
@@ -111,8 +127,9 @@ public class WorldManager {
         bodiesToDestroy.clear();
 
         for (Pair<WorldBody, Function<Void, Void>> body : toDestroy) {
-            world.destroyBody(body.getKey().getBody());
-            worldBodies.remove(body.getKey().getId());
+            System.out.println("Destroy: " + body.getKey().id());
+            world.destroyBody(body.getKey().body.body);
+            worldBodies.remove(body.getKey().id());
             body.getKey().dispose();
         }
 
@@ -132,8 +149,8 @@ public class WorldManager {
                 WorldBody o1 = (WorldBody) contact.getFixtureA().getBody().getUserData();
                 WorldBody o2 = (WorldBody) contact.getFixtureB().getBody().getUserData();
 
-                o1.beginContact(o2);
-                o2.beginContact(o1);
+                o1.controller.collisions.beginContact(o2);
+                o2.controller.collisions.beginContact(o1);
             }
 
             @Override
@@ -141,8 +158,8 @@ public class WorldManager {
                 WorldBody o1 = (WorldBody) contact.getFixtureA().getBody().getUserData();
                 WorldBody o2 = (WorldBody) contact.getFixtureB().getBody().getUserData();
 
-                o1.endContact(o2);
-                o2.endContact(o1);
+                o1.controller.collisions.endContact(o2);
+                o2.controller.collisions.endContact(o1);
             }
 
             @Override

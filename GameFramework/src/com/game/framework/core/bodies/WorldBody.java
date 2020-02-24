@@ -59,7 +59,7 @@ public abstract class WorldBody implements Renderable, Collidable {
 
         this.body.setUserData(this);
 
-        world.addBody(this);
+        //world.addBody(this);
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class WorldBody implements Renderable, Collidable {
      * @param inputAdapterFn Function that takes this WorldBody and returns a InputAdapter for it.
      */
     public void setInputAdapter(Function<WorldBody, InputAdapter> inputAdapterFn) {
-        InputProcessor.getInputProcessor().addInput(this, inputAdapterFn.call(this));
+        //InputProcessor.getInputProcessor().addInput(this, inputAdapterFn.call(this));
     }
 
     public Body getBody() {
@@ -132,15 +132,15 @@ public abstract class WorldBody implements Renderable, Collidable {
         Vector2 dim = getDimensions();
         float density = body.getFixtureList().first().getDensity();
 
-        world.remove(this, aVoid -> {
-            this.body = copyBody(type, isSensor, pos, dim, scale, density);
-            this.body.setUserData(this);
-            world.addBody(this);
-            for (Joint joint : joints) {
-                joint.buildOn(this);
-            }
-            return null;
-        });
+//        world.remove(this, aVoid -> {
+//            this.body = copyBody(type, isSensor, pos, dim, scale, density);
+//            this.body.setUserData(this);
+//            world.addBody(this);
+//            for (Joint joint : joints) {
+//                joint.buildOn(this);
+//            }
+//            return null;
+//        });
     }
 
     public abstract Body copyBody(BodyDef.BodyType type, boolean isSensor, Vector2 pos, Vector2 dim, Vector2 scale, float density);
@@ -171,12 +171,10 @@ public abstract class WorldBody implements Renderable, Collidable {
     // ---------------------------------------------------------------------------------------------
 
     // Animations ------------------------------------------------------------------------------------
-    @Override
     public void runAnimation(WorldBodyAnimation animation) {
         runAnimation(animation, null);
     }
 
-    @Override
     public void runAnimation(WorldBodyAnimation animation, Function<Void, Void> callback) {
         this.animation = animation;
         this.animationCallback = callback;
@@ -184,7 +182,7 @@ public abstract class WorldBody implements Renderable, Collidable {
         elapsedTime = 0;
     }
 
-    @Override
+    //@Override
     public void incrementTime(float deltaTime) {
         if (animation != null) {
             boolean shouldCallback = false;
@@ -228,16 +226,16 @@ public abstract class WorldBody implements Renderable, Collidable {
     }
 
     @Override
-    public void beginContact(Collidable other) {
+    public void beginContact(com.game.framework.core2.bodies.WorldBody other) {
         if (_beginCollision != null) {
-            _beginCollision.call((WorldBody) other);
+        //    _beginCollision.call(other);
         }
     }
 
     @Override
-    public void endContact(Collidable other) {
+    public void endContact(com.game.framework.core2.bodies.WorldBody other) {
         if (_endCollision != null) {
-            _endCollision.call((WorldBody) other);
+        //    _endCollision.call(other);
         }
     }
 
@@ -275,8 +273,8 @@ public abstract class WorldBody implements Renderable, Collidable {
      * Deletes the WorldBody from the world.
      */
     public void destroy() {
-        world.remove(this);
-        InputProcessor.getInputProcessor().removeInput(this);
+        //world.remove(this);
+        //InputProcessor.getInputProcessor().removeInput(this);
     }
 
     public void dispose() {

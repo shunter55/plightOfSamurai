@@ -22,7 +22,7 @@ public class Samurai extends CustomWorldBody {
 
     public Samurai(WorldManager worldManager) {
         super(worldManager, worldManager.generateId(), "samurai/idle1", BodyDef.BodyType.DynamicBody, 0f, 0f, new Vector2(0.5f, 0.5f), 1f);
-        worldManager.addBody(this);
+//        worldManager.addBody(this);
 
         samuraiIdle = new WorldBodyAnimation(1f / 4f,
             "samurai/idle/samurai_idle_front_1_64.png",

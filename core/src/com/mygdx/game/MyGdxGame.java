@@ -4,7 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.game.framework.character.Character;
+//import com.game.framework.character.Character;
 import com.game.framework.core.bodies.BoxWorldBody;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
@@ -16,7 +16,7 @@ import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.renderer.WorldRenderer;
 import com.game.framework.core.world.WorldManager;
 import com.mygdx.game.characters.Samurai;
-import com.mygdx.game.characters.SamuraiCharacter;
+//import com.mygdx.game.characters.SamuraiCharacter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,8 +45,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		box.runAnimation(new WorldBodyAnimation("samurai/idle/samurai_idle_front_1_64.png"));
 
 		// Character
-		samurai = new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(0.5f, 0.5f));
-		samurai.setUpdate(UpdateMethods.wasdMovement(3f));
+//		samurai = new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(0.5f, 0.5f));
+		//samurai.setUpdate(UpdateMethods.wasdMovement(3f));
 
 		// Walls
 		new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(-2.5f, 0f).size(0.01f, 5f).build();
@@ -64,7 +64,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		// Spawn
 		if (Gdx.input.isKeyPressed(Input.Keys.R)) {
 			new BoxBuilder(worldManager).size(0.05f, 0.05f).build();
-			new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(1, 1));
+//			new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(1, 1));
 		}
 
 		// Rotation

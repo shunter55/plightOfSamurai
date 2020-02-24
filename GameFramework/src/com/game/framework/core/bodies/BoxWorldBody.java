@@ -43,7 +43,7 @@ public class BoxWorldBody extends WorldBody {
      * @param density The density of the box.
      * @return The newly created Box Body.
      */
-    private static Body createBox(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density) {
+    public static Body createBox(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density) {
         // body definition
         BodyDef playerDef = new BodyDef();
         playerDef.type = type;

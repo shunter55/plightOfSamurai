@@ -60,7 +60,7 @@ public class Weld implements Joint {
     }
 
     public void dispose() {
-        bodyB.getWorld().remove(bodyB);
+        //bodyB.getWorld().remove(bodyB);
     }
 
 }
