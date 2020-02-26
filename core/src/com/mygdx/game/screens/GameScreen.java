@@ -32,7 +32,7 @@ public class GameScreen implements Screen {
     private WorldRenderer worldRenderer;
 
 //    SamuraiCharacter samurai;
-    WorldBody samurai;
+    Samurai2 samurai;
 
     public GameScreen(GameMain game) {
         this.game = game;
@@ -135,8 +135,10 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         if (worldRenderer != null)
             worldRenderer.dispose();
+
+        //worldRenderer.resetCamera(WorldRenderer.CameraMode.Zoom, worldSize.x, worldSize.y);
         worldRenderer = new WorldRenderer(WorldRenderer.CameraMode.Zoom, worldSize.x, worldSize.y);
-        //samurai.addInputAdapter(worldRenderer);
+        samurai.resize(worldRenderer);
     }
 
     @Override

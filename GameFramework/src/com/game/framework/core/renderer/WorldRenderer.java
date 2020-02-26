@@ -16,7 +16,6 @@ import com.game.framework.core.world.WorldManager;
 public class WorldRenderer {
 
     private Camera camera;
-    private Vector2 worldRatio;
 
     public SpriteBatch spriteBatch;
     private Box2DDebugRenderer debugRenderer;
@@ -40,11 +39,13 @@ public class WorldRenderer {
 
     public WorldRenderer(Camera camera, Vector2 worldRatio) {
         this.camera = camera;
-        this.worldRatio = worldRatio;
-        System.out.println(worldRatio);
 
         spriteBatch = new SpriteBatch();
         debugRenderer = new Box2DDebugRenderer();
+    }
+
+    public void resetCamera(CameraMode mode, float viewWidth, float viewHeight) {
+        this.camera = getCamera(mode, viewWidth, viewHeight);
     }
 
     /**

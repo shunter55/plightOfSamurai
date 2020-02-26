@@ -9,16 +9,16 @@ import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.renderer.WorldRenderer;
 import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.WorldBody;
-import com.game.framework.core2.builders.BodyBuilder;
 import com.game.framework.core2.builders.BoxBodyBuilder;
 import com.game.framework.core2.builders.CustomBodyBuilder;
+import com.game.framework.core2.character.Character;
 import com.game.framework.core2.joints.Joint;
 import com.game.framework.core2.joints.Weld;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Samurai2 extends WorldBody {
+public class Samurai2 extends Character {
 
     private class SamuraiInputAdapter extends InputAdapter {
         private WorldRenderer renderer;
@@ -52,13 +52,32 @@ public class Samurai2 extends WorldBody {
             Vector2 worldPos = renderer.unproject(new Vector2(screenX, screenY));
 //            System.out.println(worldPos + " : " + body.getWorldPos());
 
-            if (worldPos.x < body.getWorldPos().x && facingRight) {
-                body.flipX();
-                facingRight = false;
-            } else if (worldPos.x > body.getWorldPos().x && !facingRight) {
-                body.flipX();
-                facingRight = true;
+            if (worldPos.x < body.getWorldPos().x) {
+                if (worldPos.y < body.getWorldPos().y)
+                    direction.face(Dir.DOWN_LEFT);
+                else
+                    direction.face(Dir.UP_LEFT);
             }
+            else if (worldPos.x > body.getWorldPos().x) {
+                if (worldPos.y < body.getWorldPos().y)
+                    direction.face(Dir.DOWN_RIGHT);
+                else
+                    direction.face(Dir.UP_RIGHT);
+            }
+
+
+
+//            if (worldPos.x < body.getWorldPos().x && facingRight) {
+////                body.flipX();
+////                body.setFlipX(true);
+//                facingRight = false;
+////                direction.face(Dir.UP_RIGHT);
+//            } else if (worldPos.x > body.getWorldPos().x && !facingRight) {
+////                body.flipX();
+////                body.setFlipX(false);
+//                facingRight = true;
+////                direction.face(Dir.UP_LEFT);
+//            }
 
 //            if (worldPos.y < getWorldPos().y) {
 //                setDefaultAnimation("idle");
@@ -67,12 +86,25 @@ public class Samurai2 extends WorldBody {
 //            }
             return true;
         }
+
+        public void updateRenderer(WorldRenderer renderer) {
+            this.renderer = renderer;
+        }
     }
+
+    private enum Dir {
+        UP_RIGHT,
+        DOWN_RIGHT,
+        UP_LEFT,
+        DOWN_LEFT
+    }
+
+    private SamuraiInputAdapter clickInput;
 
     public Samurai2(WorldManager world, WorldRenderer renderer) {
         super(new CustomBodyBuilder(world, "samurai/idle1").scale(0.5f, 0.5f));
 
-        SamuraiInputAdapter clickInput = new SamuraiInputAdapter(renderer);
+        clickInput = new SamuraiInputAdapter(renderer);
 
         Joint attackBox = new Weld(new BoxBodyBuilder(world).isSensor(true).size(0.15f, 0.17f).density(0.0001f),
             new Vector2(0.18f, -0.09f),
@@ -86,6 +118,11 @@ public class Samurai2 extends WorldBody {
             "samurai/idle/samurai_idle_front_2_64.png",
             "samurai/idle/samurai_idle_front_3_64.png",
             "samurai/idle/samurai_idle_front_4_64.png"));
+        render.animations.addAnimation("idleBack", new WorldBodyAnimation(1/4f,
+                "samurai/idle_back/samurai_idle_back_1_64.png",
+                "samurai/idle_back/samurai_idle_back_2_64.png",
+                "samurai/idle_back/samurai_idle_back_3_64.png",
+                "samurai/idle_back/samurai_idle_back_4_64.png"));
         render.animations.addAnimation("attackFront", new WorldBodyAnimation(1/16f,
                 "samurai/attack/samurai_attack_1_64.png",
                 "samurai/attack/samurai_attack_2_64.png",
@@ -98,6 +135,29 @@ public class Samurai2 extends WorldBody {
             return null;
         });
 
+        direction.addDirections(Dir.values());
+        direction.onDirection(Dir.UP_RIGHT, aVoid -> {
+            body.setFlipX(false);
+            render.animations.setDefaultAnimation("idleBack");
+            return null;
+        });
+        direction.onDirection(Dir.UP_LEFT, aVoid -> {
+            body.setFlipX(true);
+            render.animations.setDefaultAnimation("idleBack");
+            return null;
+        });
+        direction.onDirection(Dir.DOWN_RIGHT, aVoid -> {
+            body.setFlipX(false);
+            render.animations.setDefaultAnimation("idleFront");
+            return null;
+        });
+        direction.onDirection(Dir.DOWN_LEFT, aVoid -> {
+            body.setFlipX(true);
+            render.animations.setDefaultAnimation("idleFront");
+            return null;
+        });
+
+
         // Edit after Joint WorldBodies have been built.
         attackBox.getBody().controller.collisions.beginCollision(body -> {
             if (body.body.body.getType() == BodyDef.BodyType.DynamicBody &&
@@ -109,6 +169,10 @@ public class Samurai2 extends WorldBody {
             clickInput.toRemove.remove(body.id());
             return null;
         });
+    }
+
+    public void resize(WorldRenderer renderer) {
+        clickInput.updateRenderer(renderer);
     }
 
 

@@ -45,6 +45,10 @@ public class AnimationManager {
       * @param id id of the animation to play.
       */
     public void setDefaultAnimation(String id) {
+        if (!animations.containsKey(id)) {
+            throw new RuntimeException("Add " + id + " animation first using addAnimation!");
+        }
+        
         defaultAnimation = id;
         updateAnimations(null);
     }

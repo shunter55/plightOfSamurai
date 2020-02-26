@@ -41,7 +41,7 @@
 //            worldBody -> {
 //                toRemove.remove(worldBody.getId());
 //                return null;
-//            });
+//            });a
 //
 //        //addInputAdapter(world, new Vector2(5, 5));
 //
