@@ -3,6 +3,7 @@ package com.mygdx.game.characters;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.update.UpdateMethods;
 import com.game.framework.core.particles.Particle;
 import com.game.framework.core.renderer.WorldBodyAnimation;
@@ -36,21 +37,28 @@ public class Samurai2 extends Character {
             for (WorldBody body : toRemove.values())
                 body.destroy();
 
-            // Run attack animation.
-            render.animations.runAnimation("attackFront", aNull -> {
+            Function<Void, Void> attackFn = aNull -> {
                 // Destroy bodies at end of attack animation.
                 System.out.println("done");
                 for (WorldBody body : toRemove.values())
                     body.destroy();
                 return null;
-            });
+            };
+
+            // Run attack animation.
+            if (direction.isAny(Dir.DOWN_LEFT, Dir.DOWN_RIGHT)) {
+                render.animations.runAnimation("attackFront", attackFn);
+            } else {
+                render.animations.runAnimation("attackBack", attackFn);
+            }
+
+
             return true;
         }
 
         @Override
         public boolean mouseMoved (int screenX, int screenY) {
             Vector2 worldPos = renderer.unproject(new Vector2(screenX, screenY));
-//            System.out.println(worldPos + " : " + body.getWorldPos());
 
             if (worldPos.x < body.getWorldPos().x) {
                 if (worldPos.y < body.getWorldPos().y)
@@ -65,25 +73,6 @@ public class Samurai2 extends Character {
                     direction.face(Dir.UP_RIGHT);
             }
 
-
-
-//            if (worldPos.x < body.getWorldPos().x && facingRight) {
-////                body.flipX();
-////                body.setFlipX(true);
-//                facingRight = false;
-////                direction.face(Dir.UP_RIGHT);
-//            } else if (worldPos.x > body.getWorldPos().x && !facingRight) {
-////                body.flipX();
-////                body.setFlipX(false);
-//                facingRight = true;
-////                direction.face(Dir.UP_LEFT);
-//            }
-
-//            if (worldPos.y < getWorldPos().y) {
-//                setDefaultAnimation("idle");
-//            } else {
-//                setDefaultAnimation("idleBack");
-//            }
             return true;
         }
 
@@ -128,6 +117,11 @@ public class Samurai2 extends Character {
                 "samurai/attack/samurai_attack_2_64.png",
                 "samurai/attack/samurai_attack_3_64.png",
                 "samurai/attack/samurai_attack_4_64.png"));
+        render.animations.addAnimation("attackBack", new WorldBodyAnimation(1/16f,
+                "samurai/attack_back/samurai_attack_1.png",
+                "samurai/attack_back/samurai_attack_2.png",
+                "samurai/attack_back/samurai_attack_3.png",
+                "samurai/attack_back/samurai_attack_4.png"));
         render.animations.setDefaultAnimation("idleFront");
         render.particles.attach(new Particle(this, "particle1.party", 0.005f));
         onDispose(body -> {

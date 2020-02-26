@@ -88,6 +88,14 @@ public class DirectionManager {
         return currentDirection;
     }
 
+    public boolean isAny(Enum... enums) {
+        for (Enum e : enums) {
+            if (currentDirection.equals(e.toString()))
+                return true;
+        }
+        return false;
+    }
+
     /**
      * Run function whenever character starts facing a direction. When `face` is called.
      * @param dir Direction when fn should be called.
