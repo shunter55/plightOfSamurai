@@ -44,8 +44,8 @@ shape: line
 - Spawn Width - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 10.0
-highMax: 10.0
+highMin: 100.0
+highMax: 100.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -75,9 +75,9 @@ timeline0: 0.0
 active: false
 - Velocity - 
 active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 100.0
+lowMin: 90.0
+lowMax: 90.0
+highMin: 115.0
 highMax: 150.0
 relative: false
 scalingCount: 1
@@ -92,13 +92,13 @@ highMin: 65.0
 highMax: 115.0
 relative: false
 scalingCount: 3
-scaling0: 1.0
-scaling1: 1.0
-scaling2: 1.0
+scaling0: 0.0
+scaling1: 0.0
+scaling2: 0.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.5684931
-timeline2: 0.9931507
+timeline1: 0.6369863
+timeline2: 1.0
 - Rotation - 
 active: false
 - Wind - 
@@ -201,8 +201,8 @@ shape: line
 - Spawn Width - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 10.0
-highMax: 10.0
+highMin: 80.0
+highMax: 80.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -249,13 +249,13 @@ highMin: 70.0
 highMax: 110.0
 relative: false
 scalingCount: 3
-scaling0: 1.0
-scaling1: 1.0
-scaling2: 1.0
+scaling0: 0.0
+scaling1: 0.0
+scaling2: 0.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.5684931
-timeline2: 0.9931507
+timeline1: 0.5753425
+timeline2: 1.0
 - Rotation - 
 active: false
 - Wind - 

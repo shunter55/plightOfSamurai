@@ -54,7 +54,7 @@ public class Samurai2 extends Character {
                 render.animations.runAnimation("attackBack", attackFn);
             }
 
-            body.move.moveTo(worldPos, 205f, true);
+            body.move.moveTo(worldPos, 25f, true);
 
             return true;
         }
@@ -126,7 +126,8 @@ public class Samurai2 extends Character {
                 "samurai/attack_back/samurai_attack_3.png",
                 "samurai/attack_back/samurai_attack_4.png"));
         render.animations.setDefaultAnimation("idleFront");
-        render.particles.attach(new Particle(this, "particle1.party", 0.005f));
+        render.particles.attach(new Particle(this, "particle1.party", 0.005f)
+            .setOffset(0, -0.1f));
         onDispose(body -> {
             body.body.joints.disposeAll();
             return null;

@@ -2,7 +2,6 @@ package com.game.framework.core2.bodies.managers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.core2.bodies.WorldBody;
 
 import com.game.framework.core.world.WorldManager;
@@ -19,8 +18,8 @@ public class BodyManager {
 
     BodyBuilder bodyBuilder;
     public Body body;
-    public Vector2 origin;
-    public Vector2 dimensions;
+    private Vector2 origin;
+    private Vector2 dimensions;
 
     private boolean _isFlippedX = false;
     private boolean _isFlippedY = false;
@@ -122,7 +121,7 @@ public class BodyManager {
 
             BodyObj bodyObj = bodyBuilder.build();
             this.body = bodyObj.body;
-            this.dimensions = bodyObj.dimensions;
+            this.dimensions = new Vector2(Math.abs(bodyObj.dimensions.x), Math.abs(bodyObj.dimensions.y));
             this.body.setUserData(worldBody);
             setWorldPos(pos);
 
@@ -139,7 +138,7 @@ public class BodyManager {
         BodyObj bodyObj = builder.build();
         this.body = bodyObj.body;
         this.origin = bodyObj.origin;
-        this.dimensions = bodyObj.dimensions;
+        this.dimensions = new Vector2(Math.abs(bodyObj.dimensions.x), Math.abs(bodyObj.dimensions.y));
         this.body.setUserData(worldBody);
     }
 

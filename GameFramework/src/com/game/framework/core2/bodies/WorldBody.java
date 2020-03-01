@@ -1,17 +1,11 @@
 package com.game.framework.core2.bodies;
 
-import com.badlogic.gdx.InputAdapter;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.controller.InputProcessor;
-import com.game.framework.core.particles.Particle;
 import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.managers.BodyManager;
-import com.game.framework.core2.bodies.managers.CollisionManager;
 import com.game.framework.core2.bodies.managers.RenderManager;
 import com.game.framework.core2.builders.BodyBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorldBody {
     public WorldManager world;

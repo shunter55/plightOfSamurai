@@ -2,7 +2,6 @@ package com.game.framework.core.particles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.game.framework.core2.bodies.WorldBody;
 
@@ -27,7 +26,9 @@ public class Particle {
     }
 
     public void update(float deltaTime) {
-        particleEffect.setPosition(body.body.getWorldPos().x + offset.x, body.body.getWorldPos().y + offset.y);
+        particleEffect.setPosition(
+            body.body.getWorldPos().x + offset.x - (body.body.getWorldDimensions().x / 2f),
+            body.body.getWorldPos().y + offset.y);
         particleEffect.update(deltaTime);
     }
 
@@ -44,8 +45,13 @@ public class Particle {
         return particleEffect;
     }
 
-    public void setOffset(Vector2 offset) {
+    public Particle setOffset(Vector2 offset) {
         this.offset = offset;
+        return this;
+    }
+
+    public Particle setOffset(float x, float y) {
+        return setOffset(new Vector2(x, y));
     }
 
 }
