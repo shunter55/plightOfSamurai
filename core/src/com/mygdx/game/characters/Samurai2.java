@@ -33,6 +33,8 @@ public class Samurai2 extends Character {
 
         @Override
         public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+            Vector2 worldPos = renderer.unproject(new Vector2(screenX, screenY));
+
             // Destroy bodies at beginning of click.
             for (WorldBody body : toRemove.values())
                 body.destroy();
@@ -52,6 +54,7 @@ public class Samurai2 extends Character {
                 render.animations.runAnimation("attackBack", attackFn);
             }
 
+            body.move.moveTo(worldPos, 205f, true);
 
             return true;
         }

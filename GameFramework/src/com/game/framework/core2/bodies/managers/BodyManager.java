@@ -13,6 +13,8 @@ import com.game.framework.core2.joints.Joint;
 public class BodyManager {
     private WorldManager world;
     private WorldBody worldBody;
+
+    public MovementManager move;
     public JointManager joints;
 
     BodyBuilder bodyBuilder;
@@ -26,11 +28,17 @@ public class BodyManager {
     public BodyManager(WorldManager world, WorldBody worldBody, BodyBuilder bodyBuilder) {
         this.world = world;
         this.worldBody = worldBody;
+
+        this.move = new MovementManager(this);
         this.joints = new JointManager(worldBody);
 
         this.bodyBuilder = bodyBuilder.copy();
 
         buildBody(bodyBuilder);
+    }
+
+    public void update(float deltaTime) {
+        move.update(deltaTime);
     }
 
     // World Position

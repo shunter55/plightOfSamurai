@@ -61,6 +61,7 @@ public class WorldBody {
 
         render.update(elapsedTime);
         controller.update();
+        body.update(elapsedTime);
     }
 
     /**

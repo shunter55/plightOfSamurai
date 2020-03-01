@@ -3,7 +3,6 @@ package com.game.framework.core2.bodies;
 import com.badlogic.gdx.InputAdapter;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.controller.InputProcessor;
-import com.game.framework.core2.bodies.WorldBody;
 import com.game.framework.core2.bodies.managers.CollisionManager;
 
 public class ControlManager {
@@ -15,7 +14,7 @@ public class ControlManager {
 
     public ControlManager(WorldBody body) {
         this.body = body;
-        this.collisions = new CollisionManager();
+        this.collisions = new CollisionManager(body);
     }
 
     public void update() {

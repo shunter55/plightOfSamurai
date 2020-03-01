@@ -99,9 +99,8 @@ public class GameScreen implements Screen {
 
         // Spawn
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-            new Samurai2(worldManager, worldRenderer).controller.setUpdate(null);
-//            new BoxBuilder(worldManager).size(0.05f, 0.05f).build();
-            //new SamuraiCharacter(worldManager, new Vector2(0, 0), new Vector2(1, 1)).addInputAdapter(worldRenderer);
+            //new Samurai2(worldManager, worldRenderer).controller.setUpdate(null);
+            new WorldBody(new BoxBodyBuilder(worldManager).size(0.1f, 0.1f).density(0.5f));
         }
 
         // Rotation
