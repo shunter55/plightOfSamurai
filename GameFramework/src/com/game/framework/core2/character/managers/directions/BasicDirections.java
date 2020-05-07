@@ -8,6 +8,9 @@ public enum BasicDirections {
     DOWN,
     DOWN_LEFT,
     LEFT,
-    UP_LEFT
+    UP_LEFT,
+    STOP,
+
+    SPACE
 }
 

@@ -20,6 +20,7 @@ import com.game.framework.core2.builders.BoxBodyBuilder;
 import com.game.framework.core2.builders.CustomBodyBuilder;
 import com.game.framework.core2.joints.Weld;
 import com.mygdx.game.GameMain;
+import com.mygdx.game.characters.BladeMaster;
 import com.mygdx.game.characters.Samurai2;
 
 public class GameScreen implements Screen {
@@ -100,7 +101,8 @@ public class GameScreen implements Screen {
         // Spawn
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
             //new Samurai2(worldManager, worldRenderer).controller.setUpdate(null);
-            new WorldBody(new BoxBodyBuilder(worldManager).size(0.1f, 0.1f).density(0.5f));
+            //new WorldBody(new BoxBodyBuilder(worldManager).size(0.1f, 0.1f).density(0.5f));
+            new BladeMaster(worldManager, worldRenderer);
         }
 
         // Rotation

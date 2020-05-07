@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.core.bodies.Function;
-import com.game.framework.core.bodies.update.UpdateMethods;
 import com.game.framework.core.particles.Particle;
 import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.renderer.WorldRenderer;
@@ -21,7 +20,7 @@ import com.game.framework.core2.joints.Weld;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Samurai2 extends Character {
+public class BladeMaster extends Character {
 
     private class SamuraiInputAdapter extends InputAdapter {
         private WorldRenderer renderer;
@@ -95,7 +94,7 @@ public class Samurai2 extends Character {
 
     private SamuraiInputAdapter clickInput;
 
-    public Samurai2(WorldManager world, WorldRenderer renderer) {
+    public BladeMaster(WorldManager world, WorldRenderer renderer) {
         super(new CustomBodyBuilder(world, "samurai/idle1").scale(0.5f, 0.5f));
 
         clickInput = new SamuraiInputAdapter(renderer);
@@ -161,15 +160,15 @@ public class Samurai2 extends Character {
     private void addAnimations() {
         // IDLE
         render.animations.addAnimation("idleFront", new WorldBodyAnimation(1/4f,
-                "samurai/idle/samurai_idle_front_1_64.png",
-                "samurai/idle/samurai_idle_front_2_64.png",
-                "samurai/idle/samurai_idle_front_3_64.png",
-                "samurai/idle/samurai_idle_front_4_64.png"));
+                "bladeMaster/idle_front_64/idle_front_1.png",
+                "bladeMaster/idle_front_64/idle_front_2.png",
+                "bladeMaster/idle_front_64/idle_front_3.png",
+                "bladeMaster/idle_front_64/idle_front_4.png"));
         render.animations.addAnimation("idleBack", new WorldBodyAnimation(1/4f,
-                "samurai/idle_back/samurai_idle_back_1_64.png",
-                "samurai/idle_back/samurai_idle_back_2_64.png",
-                "samurai/idle_back/samurai_idle_back_3_64.png",
-                "samurai/idle_back/samurai_idle_back_4_64.png"));
+                "bladeMaster/idle_back_64/idle_back_1.png",
+                "bladeMaster/idle_back_64/idle_back_2.png",
+                "bladeMaster/idle_back_64/idle_back_3.png",
+                "bladeMaster/idle_back_64/idle_back_4.png"));
 
         // WALK
         render.animations.addAnimation("walkFront", new WorldBodyAnimation(1/8f,

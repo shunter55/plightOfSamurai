@@ -1,32 +1,16 @@
 package com.game.framework.core2.character.managers;
 
 import com.game.framework.core.bodies.Function;
+import com.game.framework.core2.character.managers.directions.DirFuncs;
+
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Manages the Direction a Character faces.
+ * Allows adding functionality for whenever the character faces a direction.
+ */
 public class DirectionManager {
-
-    private class DirFuncs {
-        private Function<Void, Void> _onDir, _fromDir;
-
-        public void setOnDir(Function<Void, Void> fn) {
-            _onDir = fn;
-        }
-
-        public void setFromDir(Function<Void, Void> fn) {
-            _fromDir = fn;
-        }
-
-        public void onDir() {
-            if (_onDir != null)
-                _onDir.call(null);
-        }
-
-        public void fromDir() {
-            if (_fromDir != null)
-                _fromDir.call(null);
-        }
-    }
 
     private HashMap<String, DirFuncs> directions;
     private String currentDirection;
@@ -59,11 +43,21 @@ public class DirectionManager {
         return directions.keySet();
     }
 
+    public boolean containsDirection(String dir) {
+        return getDirections().contains(dir);
+    }
+
+    public boolean containsDirection(Enum dir) {
+        return containsDirection(dir.toString());
+    }
+
     /**
      * Character begins facing a direction.
      * @param dir The direction to face.
      */
     public void face(String dir) {
+        verifyDirection(dir);
+
         if (!getDirections().contains(dir))
             throw new RuntimeException(dir + " is not in " + getDirections());
 
@@ -122,6 +116,19 @@ public class DirectionManager {
             throw new RuntimeException(dir + " not in " + getDirections() + " addDirection first!");
 
         directions.get(dir).setFromDir(fn);
+    }
+
+    /**
+     * Throws an error if the direction is not valid.
+     */
+    private void verifyDirection(String dir) {
+        if (!containsDirection(dir)) {
+            throw new RuntimeException(dir + " is not in " + getDirections());
+        }
+    }
+
+    private void verifyDirection(Enum dir) {
+        verifyDirection(dir.toString());
     }
 
 }
