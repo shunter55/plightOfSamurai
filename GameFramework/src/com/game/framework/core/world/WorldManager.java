@@ -9,7 +9,6 @@ import com.game.framework.core2.bodies.WorldBody;
 import com.game.framework.core.bodies.builders.BoxBuilder;
 import com.game.framework.core.bodies.builders.CustomBuilder;
 import com.game.framework.core.bodies.builders.WorldBodyBuilder;
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -174,4 +173,22 @@ public class WorldManager {
         };
     }
 
+    public class Pair<T, T1> {
+
+        private T key;
+        private T1 value;
+
+        public Pair(T key, T1 value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public T getKey() {
+            return key;
+        }
+
+        public T1 getValue() {
+            return value;
+        }
+    }
 }
