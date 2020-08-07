@@ -18,6 +18,7 @@ public class CustomBodyBuilder extends BodyBuilder {
     private BodyDef.BodyType _type = BodyDef.BodyType.DynamicBody;
     private Vector2 _pos = new Vector2(0, 0);
     private float _density = 1;
+    private float _radians = 0;
 
     public CustomBodyBuilder(WorldManager worldManager, String shapePath) {
         super(worldManager);
@@ -34,7 +35,8 @@ public class CustomBodyBuilder extends BodyBuilder {
             _pos.x,
             _pos.y,
             _scale,
-            _density
+            _density,
+            _radians
         );
     }
 
@@ -88,7 +90,7 @@ public class CustomBodyBuilder extends BodyBuilder {
         return this;
     }
 
-    private static BodyObj createCustom(World world, BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density) {
+    private static BodyObj createCustom(World world, BodyDef.BodyType type, String shapePath, float x, float y, Vector2 scale, float density, float radians) {
         BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal(shapePath));
 
         // body definition
@@ -103,7 +105,7 @@ public class CustomBodyBuilder extends BodyBuilder {
         fixtureDef.restitution = 0f;
 
         Body body = world.createBody(playerDef);
-        body.setTransform(x, y, 0);
+        body.setTransform(x, y, radians);
 
         loader.attachFixture(body, "Name", fixtureDef, scale);
 

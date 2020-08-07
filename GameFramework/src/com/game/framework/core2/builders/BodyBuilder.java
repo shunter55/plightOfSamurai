@@ -10,6 +10,7 @@ public abstract class BodyBuilder {
 
     public WorldManager world;
     public Vector2 _scale = new Vector2(1, 1);
+    protected float _radians = 0;
 
     public abstract BodyObj build();
     public abstract BodyBuilder copy();
@@ -35,6 +36,16 @@ public abstract class BodyBuilder {
 
     public BodyBuilder scaleY(float y) {
         this._scale.y = y;
+        return this;
+    }
+
+    public BodyBuilder rotateRad(float radians) {
+        this._radians = radians;
+        return this;
+    }
+
+    public BodyBuilder rotateDeg(float degrees) {
+        this._radians = (float)(degrees * Math.PI / 180);
         return this;
     }
 

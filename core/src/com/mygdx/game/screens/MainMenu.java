@@ -1,4 +1,4 @@
-package com.mygdx.game.screens;
+/*package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -93,3 +93,4 @@ public class MainMenu extends ScreenAdapter {
         stage.draw();
     }
 }
+*/

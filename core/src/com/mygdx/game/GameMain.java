@@ -1,35 +1,17 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
-import com.mygdx.game.screens.GameScreen;
-import com.mygdx.game.screens.MainMenu;
+import com.mygdx.game.screens.PhysicsBalls;
 
 public class GameMain extends Game {
 
-    private MainMenu mainMenu;
-    private GameScreen gameScreen;
+    private PhysicsBalls physicsBalls;
 
     @Override
     public void create() {
-        mainMenu = new MainMenu(this);
-        gameScreen = new GameScreen(this);
+        physicsBalls = new PhysicsBalls(this);
 
-        setScreen(mainMenu);
-    }
-
-    public void mainMenu() {
-        mainMenu.setContinue();
-        setScreen(mainMenu);
-    }
-
-    public void startGame() {
-        setScreen(gameScreen);
-    }
-
-    public void restartGame() {
-        gameScreen.dispose();
-        gameScreen = new GameScreen(this);
-        startGame();
+        setScreen(physicsBalls);
     }
 
     @Override

@@ -1,4 +1,6 @@
+/*
 package com.mygdx.game.screens;
+
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -73,6 +75,7 @@ public class GameScreen implements Screen {
 //        samurai.render.particles.attach(new Particle(samurai, "particle1.party", 0.005f));
 
         samurai = new Samurai2(worldManager, worldRenderer);
+        new WorldBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.DynamicBody).pos(1.0f,1.0f).size(0.1f, 0.1f));
 
 
 
@@ -163,3 +166,4 @@ public class GameScreen implements Screen {
         worldRenderer.dispose();
     }
 }
+*/
