@@ -9,6 +9,7 @@ import com.game.framework.core2.bodies.WorldBody;
 import com.game.framework.core.bodies.builders.BoxBuilder;
 import com.game.framework.core.bodies.builders.CustomBuilder;
 import com.game.framework.core.bodies.builders.WorldBodyBuilder;
+import com.game.framework.core2.builders.BodyBuilder;
 
 import java.util.*;
 
@@ -107,6 +108,15 @@ public class WorldManager {
         if (body.id() == null)
             throw new RuntimeException("Body Id cannot be null.");
         worldBodies.put(body.id(), body);
+    }
+
+    /**
+     * Add a body to the world.
+     * @param builder The BodyBuilder that defines the body to add.
+     */
+    public void addBody(BodyBuilder builder) {
+        WorldBody newBody = new WorldBody(builder, generateId());
+        worldBodies.put(newBody.id(), newBody);
     }
 
     public WorldBody getBody(String id) {
