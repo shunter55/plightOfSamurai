@@ -95,7 +95,7 @@ public class BladeMaster extends Character {
     private SamuraiInputAdapter clickInput;
 
     public BladeMaster(WorldManager world, WorldRenderer renderer) {
-        super(new CustomBodyBuilder(world, "samurai/idle1").scale(0.5f, 0.5f));
+        super(world, new CustomBodyBuilder(world, "samurai/idle1").scale(0.5f, 0.5f));
 
         clickInput = new SamuraiInputAdapter(renderer);
 

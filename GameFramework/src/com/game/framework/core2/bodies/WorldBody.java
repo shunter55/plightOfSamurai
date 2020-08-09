@@ -6,6 +6,7 @@ import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.managers.BodyManager;
 import com.game.framework.core2.bodies.managers.RenderManager;
 import com.game.framework.core2.builders.BodyBuilder;
+import com.game.framework.core2.builders.Buildable;
 
 public class WorldBody {
     public WorldManager world;
@@ -21,9 +22,9 @@ public class WorldBody {
     // When destroyed
     public Function<WorldBody, Void> _onDispose = null;
 
-    public WorldBody(BodyBuilder builder, String idOverride) {
-        this.world = builder.world;
-        this.body = new BodyManager(world, this, builder);
+    public WorldBody(WorldManager world, Buildable builder, String idOverride) {
+        this.world = world;
+        this.body = new BodyManager(this, builder.getBodyBuilder());
         this.render = new RenderManager(this.body);
         this.controller = new ControlManager(this);
 
@@ -32,8 +33,8 @@ public class WorldBody {
         world.addBody(this);
     }
 
-    public WorldBody(BodyBuilder builder) {
-        this(builder, builder.world.generateId());
+    public WorldBody(WorldManager world, Buildable builder) {
+        this(world, builder, world.generateId());
     }
 
     public String id() {

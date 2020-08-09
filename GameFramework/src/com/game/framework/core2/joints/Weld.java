@@ -41,7 +41,7 @@ public class Weld implements Joint {
             bodyBBuilder.scaleY(Math.abs(bodyBBuilder._scale.y));
 
         if (bodyB == null) {
-            bodyB = new WorldBody(bodyBBuilder);
+            bodyB = new WorldBody(body.world, bodyBBuilder);
         } else {
             dispose();
             bodyB.body.buildBody(bodyBBuilder);

@@ -10,6 +10,7 @@ import com.game.framework.core.bodies.builders.BoxBuilder;
 import com.game.framework.core.bodies.builders.CustomBuilder;
 import com.game.framework.core.bodies.builders.WorldBodyBuilder;
 import com.game.framework.core2.builders.BodyBuilder;
+import com.game.framework.core2.builders.Buildable;
 
 import java.util.*;
 
@@ -114,8 +115,8 @@ public class WorldManager {
      * Add a body to the world.
      * @param builder The BodyBuilder that defines the body to add.
      */
-    public void addBody(BodyBuilder builder) {
-        WorldBody newBody = new WorldBody(builder, generateId());
+    public void addBody(Buildable builder) {
+        WorldBody newBody = new WorldBody(this, builder);
         worldBodies.put(newBody.id(), newBody);
     }
 

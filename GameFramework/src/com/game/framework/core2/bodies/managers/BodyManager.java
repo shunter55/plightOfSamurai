@@ -4,13 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.game.framework.core2.bodies.WorldBody;
 
-import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.builders.BodyBuilder;
 import com.game.framework.core2.builders.BodyObj;
 import com.game.framework.core2.joints.Joint;
 
 public class BodyManager {
-    private WorldManager world;
     private WorldBody worldBody;
 
     public MovementManager move;
@@ -24,8 +22,12 @@ public class BodyManager {
     private boolean _isFlippedX = false;
     private boolean _isFlippedY = false;
 
-    public BodyManager(WorldManager world, WorldBody worldBody, BodyBuilder bodyBuilder) {
-        this.world = world;
+    /**
+     * Manages a WorldBody. Adds additional functionality.
+     * @param worldBody The WorldBody that is being managed.
+     * @param bodyBuilder The Builder for the WorldBody.
+     */
+    public BodyManager(WorldBody worldBody, BodyBuilder bodyBuilder) {
         this.worldBody = worldBody;
 
         this.move = new MovementManager(this);
@@ -33,7 +35,7 @@ public class BodyManager {
 
         this.bodyBuilder = bodyBuilder.copy();
 
-        buildBody(bodyBuilder);
+        buildBody(this.bodyBuilder);
     }
 
     public void update(float deltaTime) {
@@ -116,7 +118,7 @@ public class BodyManager {
 //            return null;
 //        });
 
-        world.remove(worldBody, aVoid -> {
+        worldBody.world.remove(worldBody, aVoid -> {
             bodyBuilder._scale.scl(scale);
 
             BodyObj bodyObj = bodyBuilder.build();
@@ -125,7 +127,7 @@ public class BodyManager {
             this.body.setUserData(worldBody);
             setWorldPos(pos);
 
-            world.addBody(worldBody);
+            worldBody.world.addBody(worldBody);
             for (Joint joint : joints.joints()) {
                 //joint.getBody().destroy();
                 joint.buildOn(worldBody);

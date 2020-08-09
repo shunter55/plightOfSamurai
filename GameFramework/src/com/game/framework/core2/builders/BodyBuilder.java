@@ -7,7 +7,7 @@ import com.game.framework.core.bodies.Function;
 import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.WorldBody;
 
-public abstract class BodyBuilder<T extends BodyBuilder> {
+public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T> {
 
     public WorldManager world;
 
@@ -127,6 +127,14 @@ public abstract class BodyBuilder<T extends BodyBuilder> {
     @SuppressWarnings("unchecked")
     private T self() {
         return (T) this;
+    }
+
+    /**
+     * @return The BodyBuilder that defines how the Body will be built.
+     */
+    @Override
+    public T getBodyBuilder() {
+        return self();
     }
 
 }
