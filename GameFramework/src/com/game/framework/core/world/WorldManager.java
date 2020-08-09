@@ -2,14 +2,10 @@ package com.game.framework.core.world;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.game.framework.core.bodies.BoxWorldBody;
-import com.game.framework.core.bodies.CustomWorldBody;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core2.bodies.WorldBody;
 import com.game.framework.core.bodies.builders.BoxBuilder;
 import com.game.framework.core.bodies.builders.CustomBuilder;
-import com.game.framework.core.bodies.builders.WorldBodyBuilder;
-import com.game.framework.core2.builders.BodyBuilder;
 import com.game.framework.core2.builders.Buildable;
 
 import java.util.*;
