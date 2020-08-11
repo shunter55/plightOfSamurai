@@ -20,6 +20,7 @@ public class WorldManager {
 
     private int nextObjectId = 0;
 
+    private Set<Buildable> bodiesToCreate;
     private Map<String, Pair<WorldBody, Function<Void, Void>>> bodiesToDestroy;
 
     public WorldManager() {
@@ -34,6 +35,8 @@ public class WorldManager {
     public WorldManager(Vector2 gravity, boolean doSleep) {
         this.world = new World(gravity, doSleep);
         this.worldBodies = new HashMap<>();
+
+        this.bodiesToCreate = new HashSet<>();
         this.bodiesToDestroy = new HashMap<>();
 
         world.setContactListener(getContactListener());
@@ -57,6 +60,8 @@ public class WorldManager {
      * @param timeStep The amount of time to simulate.
      */
     public void updatePhysics(float timeStep) {
+        addBodies();
+
         world.step(timeStep, 6, 2);
 
         for (WorldBody body : worldBodies.values()) {
@@ -112,6 +117,8 @@ public class WorldManager {
      * @param builder The BodyBuilder that defines the body to add.
      */
     public void addBody(Buildable builder) {
+        bodiesToCreate.add(builder);
+
         WorldBody newBody = new WorldBody(this, builder);
         worldBodies.put(newBody.id(), newBody);
     }
@@ -126,6 +133,14 @@ public class WorldManager {
 
     public String generateId() {
         return Integer.toString(++nextObjectId);
+    }
+
+    private void addBodies() {
+        for (Buildable builder : bodiesToCreate) {
+            WorldBody newBody = new WorldBody(this, builder);
+            worldBodies.put(newBody.id(), newBody);
+        }
+        bodiesToCreate.clear();
     }
 
     private void destroyBodies() {
