@@ -83,8 +83,7 @@ public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T>
     }
 
     public T angleDegree(float degrees) {
-        _angleRadians = (float) (Math.PI / 180);
-        return self();
+        return angleRadian((float) (degrees * (Math.PI / 180)));
     }
 
     public T density(float density) {
@@ -116,6 +115,7 @@ public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T>
     protected T copyFrom(BodyBuilder other) {
         _pos = other._pos;
         _scale = other._scale;
+        _angleRadians = other._angleRadians;
         _density = other._density;
         _restitution = other._restitution;
 
