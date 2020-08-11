@@ -80,10 +80,10 @@ public class GameScreen implements Screen {
 
 
         // Walls
-        new WorldBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(-2.5f, 0f).size(0.01f, 5f));
-        new WorldBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(2.5f, 0f).size(0.01f, 5f));
-        new WorldBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, 2.5f).size(5f, 0.01f));
-        new WorldBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, -2.5f).size(5f, 0.01f));
+        worldManager.addBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(-2.5f, 0f).size(0.01f, 5f));
+        worldManager.addBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(2.5f, 0f).size(0.01f, 5f));
+        worldManager.addBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, 2.5f).size(5f, 0.01f));
+        worldManager.addBody(new BoxBodyBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, -2.5f).size(5f, 0.01f));
 //        new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(-2.5f, 0f).size(0.01f, 5f).build();
 //        new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(2.5f, 0f).size(0.01f, 5f).build();
 //        new BoxBuilder(worldManager).type(BodyDef.BodyType.StaticBody).pos(0f, -2.5f).size(5f, 0.1f).build();

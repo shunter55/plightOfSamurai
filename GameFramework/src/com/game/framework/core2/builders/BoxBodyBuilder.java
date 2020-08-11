@@ -2,18 +2,11 @@ package com.game.framework.core2.builders;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.game.framework.core.bodies.BoxWorldBody;
-import com.game.framework.core.bodies.Function;
-import com.game.framework.core.bodies.WorldBody;
 import com.game.framework.core.world.WorldManager;
 
-public class BoxBodyBuilder extends BodyBuilder {
+public class BoxBodyBuilder extends BodyBuilder<BoxBodyBuilder> {
 
-    private BodyDef.BodyType _type = BodyDef.BodyType.DynamicBody;
-    private boolean _isSensor = false;
-    private Vector2 _pos = new Vector2(0, 0);
     private Vector2 _size = new Vector2(1, 1);
-    private float _density = 1;
 
     public BoxBodyBuilder(WorldManager worldManager) {
         super(worldManager);
@@ -29,46 +22,16 @@ public class BoxBodyBuilder extends BodyBuilder {
             _pos.y,
             _size.x * Math.abs(_scale.x),
             _size.y * Math.abs(_scale.y),
+            _angleRadians,
             _density,
-            _restitution,
-            _radians
+            _restitution
         );
     }
 
     @Override
-    public BodyBuilder copy() {
-        return new BoxBodyBuilder(world).type(_type).isSensor(_isSensor).pos(_pos).size(_size).scale(_scale).density(_density);
-    }
-
-    public BoxBodyBuilder type(BodyDef.BodyType type) {
-        this._type = type;
-        return this;
-    }
-
-    public BoxBodyBuilder isSensor(boolean isSensor) {
-        this._isSensor = isSensor;
-        return this;
-    }
-
-    public BoxBodyBuilder pos(Vector2 pos) {
-        this._pos = pos;
-        return this;
-    }
-
-    public BoxBodyBuilder pos(float x, float y) {
-        this._pos.x = x;
-        this._pos.y = y;
-        return this;
-    }
-
-    public BoxBodyBuilder posX(float x) {
-        this._pos.x = x;
-        return this;
-    }
-
-    public BoxBodyBuilder posY(float y) {
-        this._pos.y = y;
-        return this;
+    public BoxBodyBuilder copy() {
+        BoxBodyBuilder copy = new BoxBodyBuilder(world).size(_size);
+        return copy.copyFrom(this);
     }
 
     public BoxBodyBuilder size(Vector2 size) {
@@ -92,26 +55,6 @@ public class BoxBodyBuilder extends BodyBuilder {
         return this;
     }
 
-    public BoxBodyBuilder scale(Vector2 scale) {
-        super.scale(scale);
-        return this;
-    }
-
-    public BoxBodyBuilder scaleX(float x) {
-        super.scaleX(x);
-        return this;
-    }
-
-    public BoxBodyBuilder scaleY(float y) {
-        super.scaleY(y);
-        return this;
-    }
-
-    public BoxBodyBuilder density(float density) {
-        this._density = density;
-        return this;
-    }
-
     /**
      * Create a Box2D Box Body.
      * @param world The world the Body will be created in.
@@ -122,9 +65,10 @@ public class BoxBodyBuilder extends BodyBuilder {
      * @param width The width of the box.
      * @param height The height of the box.
      * @param density The density of the box.
+     * @param restitution The restitution of the box.
      * @return The newly created Box Body.
      */
-    private static BodyObj createBox(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density, float restitution, float radians) {
+    private static BodyObj createBox(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float angle, float density, float restitution) {
         // body definition
         BodyDef playerDef = new BodyDef();
         playerDef.type = type;
@@ -142,7 +86,7 @@ public class BoxBodyBuilder extends BodyBuilder {
 
         Body body = world.createBody(playerDef);
         Fixture f = body.createFixture(fixtureDef);
-        body.setTransform(x, y, radians);
+        body.setTransform(x, y, angle);
 
         boxShape.dispose();
 

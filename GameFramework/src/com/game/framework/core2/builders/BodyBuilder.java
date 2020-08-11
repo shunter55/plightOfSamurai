@@ -2,57 +2,139 @@ package com.game.framework.core2.builders;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.WorldBody;
 
-public abstract class BodyBuilder {
+public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T> {
 
     public WorldManager world;
+
+    protected Vector2 _pos = new Vector2(0, 0);
     public Vector2 _scale = new Vector2(1, 1);
-    protected float _radians = 0;
+    protected float _angleRadians = 0;
+    protected float _density = 1;
     protected float _restitution = 0;
 
+    protected BodyDef.BodyType _type = BodyDef.BodyType.DynamicBody;
+    protected boolean _isSensor = false;
+
+    /**
+     * Build the BodyObject.
+     * @return A new BodyObject.
+     */
     public abstract BodyObj build();
-    public abstract BodyBuilder copy();
+
+    /**
+     * Implementation should use copyInto to set BodyBuilder fields.
+     * @return Copy of the builder.
+     */
+    public abstract T copy();
 
     public BodyBuilder(WorldManager world) {
         this.world = world;
     }
 
-    public BodyBuilder scale(Vector2 scale) {
+    public T pos(Vector2 pos) {
+        this._pos = pos;
+        return self();
+    }
+
+    public T pos(float x, float y) {
+        this._pos.x = x;
+        this._pos.y = y;
+        return self();
+    }
+
+    public T posX(float x) {
+        this._pos.x = x;
+        return self();
+    }
+
+    public T posY(float y) {
+        this._pos.y = y;
+        return self();
+    }
+
+    public T scale(Vector2 scale) {
         this._scale = scale;
-        return this;
+        return self();
     }
 
-    public BodyBuilder scale(float x, float y) {
+    public T scale(float x, float y) {
         scale(new Vector2(x, y));
-        return this;
+        return self();
     }
 
-    public BodyBuilder scaleX(float x) {
+    public T scaleX(float x) {
         this._scale.x = x;
-        return this;
+        return self();
     }
 
-    public BodyBuilder scaleY(float y) {
+    public T scaleY(float y) {
         this._scale.y = y;
-        return this;
+        return self();
     }
 
-    public BodyBuilder rotateRad(float radians) {
-        this._radians = radians;
-        return this;
+    public T angleRadian(float radians) {
+        _angleRadians = radians;
+        return self();
     }
 
-    public BodyBuilder rotateDeg(float degrees) {
-        this._radians = (float)(degrees * Math.PI / 180);
-        return this;
+    public T angleDegree(float degrees) {
+        _angleRadians = (float) (Math.PI / 180);
+        return self();
     }
 
-    public BodyBuilder restitution(float restitution) {
+    public T density(float density) {
+        this._density = density;
+        return self();
+    }
+
+    /**
+     * Bounciness of the object. Between [0, 1].
+     */
+    public T restitution(float restitution) {
         this._restitution = restitution;
-        return this;
+        return self();
+    }
+
+    public T type(BodyDef.BodyType type) {
+        this._type = type;
+        return self();
+    }
+
+    public T isSensor(boolean isSensor) {
+        this._isSensor = isSensor;
+        return self();
+    }
+
+    /**
+     * Copy values from other BodyBuilder.
+     */
+    protected T copyFrom(BodyBuilder other) {
+        _pos = other._pos;
+        _scale = other._scale;
+        _density = other._density;
+        _restitution = other._restitution;
+
+        _type = other._type;
+        _isSensor = other._isSensor;
+        return self();
+    }
+
+    @SuppressWarnings("unchecked")
+    private T self() {
+        return (T) this;
+    }
+
+    /**
+     * @return The BodyBuilder that defines how the Body will be built.
+     */
+    @Override
+    public T getBodyBuilder() {
+        return self();
     }
 
 }
