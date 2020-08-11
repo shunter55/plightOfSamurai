@@ -30,6 +30,7 @@ public class BoxBodyBuilder extends BodyBuilder {
             _size.x * Math.abs(_scale.x),
             _size.y * Math.abs(_scale.y),
             _density,
+            _restitution,
             _radians
         );
     }
@@ -123,7 +124,7 @@ public class BoxBodyBuilder extends BodyBuilder {
      * @param density The density of the box.
      * @return The newly created Box Body.
      */
-    private static BodyObj createBox(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density, float radians) {
+    private static BodyObj createBox(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float density, float restitution, float radians) {
         // body definition
         BodyDef playerDef = new BodyDef();
         playerDef.type = type;
@@ -136,6 +137,7 @@ public class BoxBodyBuilder extends BodyBuilder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = boxShape;
         fixtureDef.density = density;
+        fixtureDef.restitution = restitution;
         fixtureDef.isSensor = isSensor;
 
         Body body = world.createBody(playerDef);
