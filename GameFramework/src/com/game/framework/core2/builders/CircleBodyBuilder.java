@@ -7,13 +7,9 @@ import com.game.framework.core.bodies.Function;
 import com.game.framework.core.bodies.WorldBody;
 import com.game.framework.core.world.WorldManager;
 
-public class CircleBodyBuilder extends BodyBuilder {
+public class CircleBodyBuilder extends BodyBuilder<CircleBodyBuilder> {
 
-   private BodyDef.BodyType _type = BodyDef.BodyType.DynamicBody;
-   private boolean _isSensor = false;
-   private Vector2 _pos = new Vector2(0, 0);
    private float _radius = 1;
-   private float _density = 1;
 
    public CircleBodyBuilder(WorldManager worldManager) {
       super(worldManager);
@@ -30,68 +26,18 @@ public class CircleBodyBuilder extends BodyBuilder {
           _radius * Math.abs(_scale.x),
           _density,
           _restitution,
-          _radians
+          _angleRadians
       );
    }
 
    @Override
-   public BodyBuilder copy() {
-      return new CircleBodyBuilder(world).type(_type).isSensor(_isSensor).pos(_pos).radius(_radius).scale(_scale).density(_density);
-   }
-
-   public CircleBodyBuilder type(BodyDef.BodyType type) {
-      this._type = type;
-      return this;
-   }
-
-   public CircleBodyBuilder isSensor(boolean isSensor) {
-      this._isSensor = isSensor;
-      return this;
-   }
-
-   public CircleBodyBuilder pos(Vector2 pos) {
-      this._pos = pos;
-      return this;
-   }
-
-   public CircleBodyBuilder pos(float x, float y) {
-      this._pos.x = x;
-      this._pos.y = y;
-      return this;
-   }
-
-   public CircleBodyBuilder posX(float x) {
-      this._pos.x = x;
-      return this;
-   }
-
-   public CircleBodyBuilder posY(float y) {
-      this._pos.y = y;
-      return this;
+   public CircleBodyBuilder copy() {
+      CircleBodyBuilder copy = new CircleBodyBuilder(world).radius(_radius);
+      return copy.copyFrom(this);
    }
 
    public CircleBodyBuilder radius(float radius) {
       this._radius = radius;
-      return this;
-   }
-
-   public CircleBodyBuilder scale(Vector2 scale) {
-      super.scale(scale);
-      return this;
-   }
-
-   public CircleBodyBuilder scaleX(float x) {
-      super.scaleX(x);
-      return this;
-   }
-
-   public CircleBodyBuilder scaleY(float y) {
-      super.scaleY(y);
-      return this;
-   }
-
-   public CircleBodyBuilder density(float density) {
-      this._density = density;
       return this;
    }
 

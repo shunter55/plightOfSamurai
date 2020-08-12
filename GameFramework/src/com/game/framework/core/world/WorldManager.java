@@ -116,11 +116,12 @@ public class WorldManager {
      * Add a body to the world.
      * @param builder The BodyBuilder that defines the body to add.
      */
-    public void addBody(Buildable builder) {
+    public WorldBody addBody(Buildable builder) {
         bodiesToCreate.add(builder);
 
         WorldBody newBody = new WorldBody(this, builder);
         worldBodies.put(newBody.id(), newBody);
+        return newBody;
     }
 
     public WorldBody getBody(String id) {

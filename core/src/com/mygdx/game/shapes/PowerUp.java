@@ -1,5 +1,6 @@
 package com.mygdx.game.shapes;
 
+import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.WorldBody;
 import com.game.framework.core2.builders.BodyBuilder;
 
@@ -9,8 +10,8 @@ public class PowerUp extends Shape {
    // 2 - +1 weight
    private int type;
 
-   public PowerUp(BodyBuilder builder) {
-      super(builder);
+   public PowerUp(WorldManager manager, BodyBuilder builder) {
+      super(manager, builder);
       weight = 1;
       type = randomIntRange(0, 3);
    }

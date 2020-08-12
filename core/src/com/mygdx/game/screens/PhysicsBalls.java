@@ -59,53 +59,53 @@ public class PhysicsBalls implements Screen {
         worldManager = new WorldManager();
         worldRenderer = new WorldRenderer(WorldRenderer.CameraMode.Zoom, worldSize.x, worldSize.y);
 
-        new WorldBody(
-           new BoxBodyBuilder(worldManager)
-               .type(BodyDef.BodyType.StaticBody)
-               .pos(-3.0f, 0f)
-               .size(0.01f, 5f)
+        worldManager.addBody(
+            new BoxBodyBuilder(worldManager)
+            .type(BodyDef.BodyType.StaticBody)
+            .pos(-3.0f, 0f)
+            .size(0.01f, 5f)
         );
 
-        new WorldBody(
+        worldManager.addBody(
             new BoxBodyBuilder(worldManager)
                 .type(BodyDef.BodyType.StaticBody)
                 .pos(3.0f, 0f)
                 .size(0.01f, 5f)
         );
 
-        new WorldBody(
+        worldManager.addBody(
             new BoxBodyBuilder(worldManager)
                 .type(BodyDef.BodyType.StaticBody)
                 .pos(-1.6f, 3.5f)
                 .size(1.5f, 0.01f)
-                .rotateRad(-(float)Math.PI/8)
+                .angleRadian(-(float)Math.PI/8)
         );
 
-        new WorldBody(
+        worldManager.addBody(
             new BoxBodyBuilder(worldManager)
                 .type(BodyDef.BodyType.StaticBody)
                 .pos(1.6f, 3.5f)
                 .size(1.5f, 0.01f)
-                .rotateRad((float)Math.PI/8)
+                .angleRadian((float)Math.PI/8)
         );
 
-        new WorldBody(
+        worldManager.addBody(
             new BoxBodyBuilder(worldManager)
                 .type(BodyDef.BodyType.StaticBody)
                 .pos(-1.7f, 3f)
                 .size(0.01f, 1.3f)
-                .rotateRad((float)Math.PI/2)
+                .angleRadian((float)Math.PI/2)
         );
 
-        new WorldBody(
+        worldManager.addBody(
             new BoxBodyBuilder(worldManager)
                 .type(BodyDef.BodyType.StaticBody)
                 .pos(1.7f, 3f)
                 .size(0.01f, 1.3f)
-                .rotateRad((float)Math.PI/2)
+                .angleRadian((float)Math.PI/2)
         );
 
-        stopper = new WorldBody(
+        stopper = worldManager.addBody(
             new BoxBodyBuilder(worldManager)
                 .type(BodyDef.BodyType.StaticBody)
                 .pos(0f, 2.7f)
@@ -128,7 +128,7 @@ public class PhysicsBalls implements Screen {
             return null;
         });
 
-        catcher = new WorldBody(
+        catcher = worldManager.addBody(
             new BoxBodyBuilder(worldManager)
                 .type(BodyDef.BodyType.StaticBody)
                 .pos(0f, -5.6f)
@@ -253,22 +253,22 @@ public class PhysicsBalls implements Screen {
                     .pos(xStartpt, yStartpt)
                     .isSensor(true)
                     .scale(0.2f, 0.2f);
-                addShapes(new PowerUp(shape));
+                addShapes(new PowerUp(worldManager, shape));
             }
             else if (rand < 40) {
                 shape = new BoxBodyBuilder(worldManager)
                     .type(BodyDef.BodyType.StaticBody)
                     .pos(xStartpt, yStartpt)
                     .size(0.25f, 0.25f)
-                    .rotateDeg(randomRange(0, 360));
-                addShapes(new Shape(shape));
+                    .angleDegree(randomRange(0, 360));
+                addShapes(new Shape(worldManager, shape));
             }
             else if (rand < 70) {
                 shape = new CircleBodyBuilder(worldManager)
                     .type(BodyDef.BodyType.StaticBody)
                     .pos(xStartpt, yStartpt)
                     .scale(0.3f, 0.3f);
-                addShapes(new Shape(shape));
+                addShapes(new Shape(worldManager, shape));
             }
             else{ }
             xStartpt += 1.0f;
@@ -320,7 +320,9 @@ public class PhysicsBalls implements Screen {
     private void addBall(float size, Vector2 pos) {
         CircleBodyBuilder ball = (CircleBodyBuilder)new CircleBodyBuilder(worldManager).pos(pos).restitution(0.5f);
         ball.scale(size, size);
-        balls.add( new Ball(ball) );
+        balls.add( new Ball(worldManager, ball) );
+
+        //worldManager.addBody(ball);
     }
 
     private static Vector2 getDir(Vector2 posA, Vector2 posB) {
