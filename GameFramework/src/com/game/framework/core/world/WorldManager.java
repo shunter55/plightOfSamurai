@@ -2,6 +2,7 @@ package com.game.framework.core.world;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.game.framework.WorldContactListener;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core2.bodies.WorldBody;
 import com.game.framework.core.bodies.builders.BoxBuilder;
@@ -21,6 +22,7 @@ public class WorldManager {
     private int nextObjectId = 0;
 
     private Set<Buildable> bodiesToCreate;
+    private WorldContactListener worldContactListener;
     private Map<String, Pair<WorldBody, Function<Void, Void>>> bodiesToDestroy;
 
     public WorldManager() {
@@ -39,7 +41,8 @@ public class WorldManager {
         this.bodiesToCreate = new HashSet<>();
         this.bodiesToDestroy = new HashMap<>();
 
-        world.setContactListener(getContactListener());
+        this.worldContactListener = new WorldContactListener();
+        world.setContactListener(worldContactListener);
     }
 
     // CREATE OBJECTS -------------------------------------------------------------------------------------------
@@ -63,6 +66,8 @@ public class WorldManager {
         addBodies();
 
         world.step(timeStep, 6, 2);
+
+        worldContactListener.update();
 
         for (WorldBody body : worldBodies.values()) {
             body.update(timeStep);
@@ -116,11 +121,13 @@ public class WorldManager {
      * Add a body to the world.
      * @param builder The BodyBuilder that defines the body to add.
      */
-    public void addBody(Buildable builder) {
-        bodiesToCreate.add(builder);
+    public WorldBody addBody(Buildable builder) {
+//        bodiesToCreate.add(builder);
 
         WorldBody newBody = new WorldBody(this, builder);
         worldBodies.put(newBody.id(), newBody);
+
+        return newBody;
     }
 
     public WorldBody getBody(String id) {
@@ -161,38 +168,6 @@ public class WorldManager {
             if (body.getValue() != null)
                 body.getValue().call(null);
         }
-    }
-
-    private ContactListener getContactListener() {
-        return new ContactListener() {
-            @Override
-            public void beginContact(Contact contact) {
-                WorldBody o1 = (WorldBody) contact.getFixtureA().getBody().getUserData();
-                WorldBody o2 = (WorldBody) contact.getFixtureB().getBody().getUserData();
-
-                o1.controller.collisions.beginContact(o2);
-                o2.controller.collisions.beginContact(o1);
-            }
-
-            @Override
-            public void endContact(Contact contact) {
-                WorldBody o1 = (WorldBody) contact.getFixtureA().getBody().getUserData();
-                WorldBody o2 = (WorldBody) contact.getFixtureB().getBody().getUserData();
-
-                o1.controller.collisions.endContact(o2);
-                o2.controller.collisions.endContact(o1);
-            }
-
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {
-
-            }
-
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {
-
-            }
-        };
     }
 
     public class Pair<T, T1> {

@@ -1,5 +1,6 @@
 package com.game.framework.core2.bodies;
 
+import com.badlogic.gdx.math.Vector2;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.controller.InputProcessor;
 import com.game.framework.core.world.WorldManager;
@@ -65,6 +66,10 @@ public class WorldBody {
     public void destroy() {
         world.remove(this);
         InputProcessor.getInputProcessor().removeInput(this);
+    }
+
+    public float dist(WorldBody other) {
+        return new Vector2(body.getWorldPos().x - other.body.getWorldPos().x, body.getWorldPos().y - other.body.getWorldPos().y).len();
     }
 
     public void onDispose(Function<WorldBody, Void> fn) {

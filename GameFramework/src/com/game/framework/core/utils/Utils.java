@@ -18,14 +18,21 @@ public class Utils {
         worldWidth = Math.abs(worldWidth);
         worldHeight = Math.abs(worldHeight);
 
-        float rPixel = pixWidth / pixHeight;
+        float rPixel = ((float) pixWidth) / ((float) pixHeight);
         float rWorld = worldWidth / worldHeight;
 
         if (rWorld <= rPixel) {
-            return new Vector2(pixWidth * (worldHeight / pixHeight), worldHeight);
+            return new Vector2(((float) pixWidth) * (worldHeight / ((float) pixHeight)), worldHeight);
         } else {
-            return new Vector2(worldWidth, pixHeight * (worldWidth / pixWidth));
+            return new Vector2(worldWidth, ((float) pixHeight) * (worldWidth / ((float) pixWidth)));
         }
     }
 
+    public static int randomInt(int min, int max) {
+        return (int) (Math.random() * (max - min)) + min;
+    }
+
+    public static float random(float min, float max) {
+        return (float) (Math.random() * (max - min)) + min;
+    }
 }

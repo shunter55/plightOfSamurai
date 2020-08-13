@@ -29,9 +29,10 @@ public class WorldRenderer {
 
     /**
      * Create a World Renderer.
+     * Camera is aligned to see [-viewWidth/2, viewWidth/2] x [-viewHeight/2, viewHeight/2]
      * @param mode The mode to render.
-     * @param viewWidth
-     * @param viewHeight
+     * @param viewWidth The width to view in World Coordinates.
+     * @param viewHeight The Height to view in World Coordinates.
      */
     public WorldRenderer(CameraMode mode, float viewWidth, float viewHeight) {
         this(getCamera(mode, viewWidth, viewHeight), getWorldRatio(mode, viewWidth, viewHeight));
@@ -147,6 +148,7 @@ public class WorldRenderer {
             case Stretch: return new OrthographicCamera(worldWidth, worldHeight);
             case Zoom: {
                 Vector2 worldRatio = Utils.toWorldRatio(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), worldWidth, worldHeight);
+                System.out.println(worldRatio);
                 return new OrthographicCamera(worldRatio.x, worldRatio.y);
             }
         }
