@@ -75,7 +75,7 @@ public class BoxBodyBuilder extends BodyBuilder<BoxBodyBuilder> {
 
         // shape definition
         PolygonShape boxShape = new PolygonShape();
-        boxShape.setAsBox(width, height);
+        boxShape.setAsBox(width / 2, height / 2);
 
         // fixture definition
         FixtureDef fixtureDef = new FixtureDef();
