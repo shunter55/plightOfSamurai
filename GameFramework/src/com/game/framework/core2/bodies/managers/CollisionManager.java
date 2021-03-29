@@ -11,6 +11,8 @@ public class CollisionManager implements Collidable {
 
     private Function<WorldBody, Void> _beginCollision = null;
     private Function<WorldBody, Void> _endCollision = null;
+    private Function<WorldBody, Void> _preCollision = null;
+    private Function<WorldBody, Void> _postCollision = null;
 
     public CollisionManager(WorldBody body) {
         this.body = body;
@@ -37,6 +39,26 @@ public class CollisionManager implements Collidable {
     public void endContact(WorldBody other) {
         if (_endCollision != null) {
             _endCollision.call((WorldBody) other);
+        }
+    }
+
+    public void preCollision(Function<WorldBody, Void> preCollisionFn) {
+        this._preCollision = preCollisionFn;
+    }
+
+    public void preSolve(WorldBody other) {
+        if (_preCollision != null) {
+            _preCollision.call((WorldBody) other);
+        }
+    }
+
+    public void postCollision(Function<WorldBody, Void> postCollisionFn) {
+        this._postCollision = postCollisionFn;
+    }
+
+    public void postSolve(WorldBody other) {
+        if (_postCollision != null) {
+            _postCollision.call((WorldBody) other);
         }
     }
 

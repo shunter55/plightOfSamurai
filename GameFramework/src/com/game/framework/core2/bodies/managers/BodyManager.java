@@ -110,30 +110,36 @@ public class BodyManager {
     }
 
     // Rebuild Body for Flipping
-    private void rebuildBody(Vector2 scale) {
+    public void rebuildBody(Vector2 scale, float restitution, short maskBits) {
         Vector2 pos = getWorldPos().cpy();
 
-//        worldBody.onDispose(body -> {
-//            joints.disposeAll();
-//            return null;
-//        });
-
+        Vector2 velocity = worldBody.body.body.getLinearVelocity();
         worldBody.world.remove(worldBody, aVoid -> {
             bodyBuilder._scale.scl(scale);
+            bodyBuilder.restitution(restitution);
+            bodyBuilder.maskBits(maskBits);
 
             BodyObj bodyObj = bodyBuilder.build();
             this.body = bodyObj.body;
             this.dimensions = new Vector2(Math.abs(bodyObj.dimensions.x), Math.abs(bodyObj.dimensions.y));
             this.body.setUserData(worldBody);
             setWorldPos(pos);
+            this.body.setLinearVelocity(velocity);
 
             worldBody.world.addBody(worldBody);
             for (Joint joint : joints.joints()) {
-                //joint.getBody().destroy();
                 joint.buildOn(worldBody);
             }
             return null;
         });
+    }
+
+    public void rebuildBody(Vector2 scale, float restitution) {
+        rebuildBody(scale, restitution, bodyBuilder.getMaskBits());
+    }
+
+    public void rebuildBody(Vector2 scale) {
+        rebuildBody(scale, bodyBuilder.getRestitution(), bodyBuilder.getMaskBits());
     }
 
     public void buildBody(BodyBuilder builder) {
@@ -142,6 +148,10 @@ public class BodyManager {
         this.origin = bodyObj.origin;
         this.dimensions = new Vector2(Math.abs(bodyObj.dimensions.x), Math.abs(bodyObj.dimensions.y));
         this.body.setUserData(worldBody);
+    }
+
+    public Vector2 getDimensions() {
+        return this.dimensions;
     }
 
     public void dispose() {

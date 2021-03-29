@@ -155,7 +155,7 @@ public class WorldManager {
         bodiesToDestroy.clear();
 
         for (Pair<WorldBody, Function<Void, Void>> body : toDestroy) {
-            System.out.println("Destroy: " + body.getKey().id());
+//            System.out.println("Destroy: " + body.getKey().id());
             world.destroyBody(body.getKey().body.body);
             worldBodies.remove(body.getKey().id());
             body.getKey().dispose();

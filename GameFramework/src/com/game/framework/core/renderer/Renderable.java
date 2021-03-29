@@ -2,6 +2,8 @@ package com.game.framework.core.renderer;
 
 import com.badlogic.gdx.math.Vector2;
 import com.game.framework.core.particles.Particle;
+import com.game.framework.core2.bodies.managers.BodyManager;
+import com.game.framework.core2.bodies.managers.TextManager;
 
 import java.util.List;
 
@@ -45,5 +47,13 @@ public interface Renderable extends Animated {
      * @return The List of Particle effects that should be rendered.
      */
     public List<Particle> getParticles();
+
+
+    /**
+     * Text that should be rendered
+     * @return the text that should be rendered, or null.
+     */
+    public TextManager getTextManager();
+
 
 }

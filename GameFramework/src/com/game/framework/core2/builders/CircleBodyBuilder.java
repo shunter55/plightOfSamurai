@@ -26,7 +26,9 @@ public class CircleBodyBuilder extends BodyBuilder<CircleBodyBuilder> {
           _radius * Math.abs(_scale.x),
           _density,
           _restitution,
-          _angleRadians
+          _angleRadians,
+          _categoryBits,
+          _maskBits
       );
    }
 
@@ -52,7 +54,9 @@ public class CircleBodyBuilder extends BodyBuilder<CircleBodyBuilder> {
     * @param density The density of the box.
     * @return The newly created Box Body.
     */
-   private static BodyObj createCircle(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float radius, float density, float restitution, float radians) {
+   private static BodyObj createCircle(World world, BodyDef.BodyType type, boolean isSensor,
+                           float x, float y, float radius, float density, float restitution,
+                           float radians, short categoryBits, short maskBits) {
       // body definition
       BodyDef playerDef = new BodyDef();
       playerDef.type = type;
@@ -67,6 +71,8 @@ public class CircleBodyBuilder extends BodyBuilder<CircleBodyBuilder> {
       fixtureDef.density = density;
       fixtureDef.restitution = restitution;
       fixtureDef.isSensor = isSensor;
+      fixtureDef.filter.categoryBits = categoryBits;
+      fixtureDef.filter.maskBits = maskBits;
 
       Body body = world.createBody(playerDef);
       Fixture f = body.createFixture(fixtureDef);

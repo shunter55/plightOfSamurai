@@ -8,8 +8,10 @@ public class Ball extends WorldBody {
    private boolean gravity = true;
    private int weight = 1;
 
-   public Ball(WorldManager manager, BodyBuilder builder) {
+   public Ball(WorldManager manager, BodyBuilder builder)
+   {
       super(manager, builder);
+
    }
 
    public Ball setGrav(boolean gravity) {
@@ -28,5 +30,13 @@ public class Ball extends WorldBody {
 
    public int getWeight() {
       return this.weight;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null || obj.getClass() != Ball.class)
+         return false;
+
+      return this.id().equals(((Ball)obj).id());
    }
 }

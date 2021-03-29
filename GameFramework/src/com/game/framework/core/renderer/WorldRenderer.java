@@ -2,7 +2,9 @@ package com.game.framework.core.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +18,7 @@ import com.game.framework.core.world.WorldManager;
 public class WorldRenderer {
 
     private Camera camera;
+    private Camera uiCamera;
 
     public SpriteBatch spriteBatch;
     private Box2DDebugRenderer debugRenderer;
@@ -35,11 +38,14 @@ public class WorldRenderer {
      * @param viewHeight The Height to view in World Coordinates.
      */
     public WorldRenderer(CameraMode mode, float viewWidth, float viewHeight) {
-        this(getCamera(mode, viewWidth, viewHeight), getWorldRatio(mode, viewWidth, viewHeight));
+        this(getCamera(mode, viewWidth, viewHeight),
+            new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
+            getWorldRatio(mode, viewWidth, viewHeight));
     }
 
-    public WorldRenderer(Camera camera, Vector2 worldRatio) {
+    public WorldRenderer(Camera camera, Camera uiCamera, Vector2 worldRatio) {
         this.camera = camera;
+        this.uiCamera = uiCamera;
 
         spriteBatch = new SpriteBatch();
         debugRenderer = new Box2DDebugRenderer();
@@ -87,49 +93,74 @@ public class WorldRenderer {
          //return new Vector2(worldCoord.x * worldRatio.x, worldCoord.y * worldRatio.y);
     }
 
+    public Vector2 project(Vector2 pixCoord) {
+        Vector3 worldCoord = camera.project(new Vector3(pixCoord, 0));
+        return new Vector2(worldCoord.x, worldCoord.y);
+    }
+
+    BitmapFont font = new BitmapFont();
     private void render(Renderable renderable) {
         WorldBodyAnimation animation = renderable.getAnimation();
 
+        Vector3 coords = camera.project(new Vector3(renderable.getWorldPos(), 0f))
+            .add(new Vector3(renderable.getTextManager().getOffset(), 0)
+            .add(new Vector3(-uiCamera.viewportWidth/2, -uiCamera.viewportHeight/2, 0)));
+
+        String text = renderable.getTextManager().getText();
+
         // Do not render if there is no sprite.
-        if (animation == null)
-            return;
+//        if (animation == null)
+//            return;
+        Sprite sprite = null;
+        if (animation != null) {
+            sprite = new Sprite(renderable.getFrame());
 
-        Sprite sprite = new Sprite(renderable.getFrame());
+            sprite.setFlip(animation.flipHorizontal, animation.flipVertical);
+            Vector2 origin = new Vector2(renderable.getOrigin().x, renderable.getOrigin().y);
+            if (animation.flipHorizontal) {
+                origin.x = Math.abs(renderable.getDimensions().x) - renderable.getOrigin().x;
+                //    origin.y = Math.abs(renderable.getDimensions().y) - renderable.getOrigin().y;
+            }
 
-        sprite.setFlip(animation.flipHorizontal, animation.flipVertical);
-        Vector2 origin = new Vector2(renderable.getOrigin().x, renderable.getOrigin().y);
-        if (animation.flipHorizontal) {
-            origin.x = Math.abs(renderable.getDimensions().x) - renderable.getOrigin().x;
-        //    origin.y = Math.abs(renderable.getDimensions().y) - renderable.getOrigin().y;
+            // Image width and height in terms of World Coordinates.
+            Vector2 worldRatio = Utils.toWorldRatio(
+                (int) sprite.getWidth(),
+                (int) sprite.getHeight(),
+                renderable.getDimensions().x,
+                renderable.getDimensions().y);
+
+            // Set Origin.
+            sprite.setOrigin(origin.x, origin.y);
+
+            // Set Rotation.
+            sprite.rotate((float) Math.toDegrees(renderable.getRotationRadians()));
+
+            // Set Position and Size
+            sprite.setBounds(
+                renderable.getWorldPos().x - origin.x,
+                renderable.getWorldPos().y - origin.y,
+                worldRatio.x,
+                worldRatio.y);
+
+            // Draw the Image.
+            spriteBatch.setProjectionMatrix(camera.combined);
+            spriteBatch.begin();
+            for (Particle particle : renderable.getParticles()) {
+                particle.getEffect().draw(spriteBatch);
+            }
+            if (sprite != null)
+                sprite.draw(spriteBatch);
+
+            spriteBatch.end();
         }
 
-        // Image width and height in terms of World Coordinates.
-        Vector2 worldRatio = Utils.toWorldRatio(
-            (int) sprite.getWidth(),
-            (int) sprite.getHeight(),
-            renderable.getDimensions().x,
-            renderable.getDimensions().y);
-
-        // Set Origin.
-        sprite.setOrigin(origin.x, origin.y);
-
-        // Set Rotation.
-        sprite.rotate((float) Math.toDegrees(renderable.getRotationRadians()));
-
-        // Set Position and Size
-        sprite.setBounds(
-            renderable.getWorldPos().x - origin.x,
-            renderable.getWorldPos().y - origin.y,
-            worldRatio.x,
-            worldRatio.y);
-
-        // Draw the Image.
-        spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.setProjectionMatrix(uiCamera.combined);
+//        spriteBatch.setProjectionMatrix(camera.invProjectionView);
         spriteBatch.begin();
-        for (Particle particle : renderable.getParticles()) {
-            particle.getEffect().draw(spriteBatch);
-        }
-        sprite.draw(spriteBatch);
+
+        font.setColor(Color.WHITE);
+        font.draw(spriteBatch, text, coords.x, coords.y);
+
         spriteBatch.end();
 
         for (Particle particle : renderable.getParticles()) {

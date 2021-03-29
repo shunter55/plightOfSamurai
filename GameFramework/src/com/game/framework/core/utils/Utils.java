@@ -28,6 +28,30 @@ public class Utils {
         }
     }
 
+    /**
+     * Convert WorldDimentions to PixelDimentions
+     * @param worldWidth width in World Space.
+     * @param worldHeight height in World Space
+     * @param pixWidth width in pixels.
+     * @param pixHeight height in pixels.
+     * @return The width and height in Pixel Space, maintaining the world aspect ratio.
+     */
+    public static Vector2 toPixelRatio(int worldWidth, int worldHeight, int pixWidth, int pixHeight) {
+        worldWidth = Math.abs(worldWidth);
+        worldHeight = Math.abs(worldHeight);
+        pixWidth = Math.abs(pixWidth);
+        pixHeight = Math.abs(pixHeight);
+
+        float rWorld = worldWidth / worldHeight;
+        float rPixel = ((float) pixWidth) / ((float) pixHeight);
+
+        if (rWorld <= rPixel) {
+            return new Vector2(((float) pixHeight) * (worldWidth / worldHeight), (float) pixHeight);
+        } else {
+            return new Vector2((float) pixWidth, ((float) pixWidth) * (worldHeight / worldWidth));
+        }
+    }
+
     public static int randomInt(int min, int max) {
         return (int) (Math.random() * (max - min)) + min;
     }

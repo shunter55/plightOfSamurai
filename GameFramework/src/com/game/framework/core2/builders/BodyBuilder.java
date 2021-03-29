@@ -20,6 +20,9 @@ public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T>
     protected BodyDef.BodyType _type = BodyDef.BodyType.DynamicBody;
     protected boolean _isSensor = false;
 
+    protected short _categoryBits = 0;
+    protected short _maskBits = 0;
+
     /**
      * Build the BodyObject.
      * @return A new BodyObject.
@@ -99,6 +102,10 @@ public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T>
         return self();
     }
 
+    public float getRestitution() {
+        return this._restitution;
+    }
+
     public T type(BodyDef.BodyType type) {
         this._type = type;
         return self();
@@ -107,6 +114,20 @@ public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T>
     public T isSensor(boolean isSensor) {
         this._isSensor = isSensor;
         return self();
+    }
+
+    public T categoryBits(short categoryBits) {
+        this._categoryBits = categoryBits;
+        return self();
+    }
+
+    public T maskBits(short maskBits) {
+        this._maskBits = maskBits;
+        return self();
+    }
+
+    public short getMaskBits() {
+        return this._maskBits;
     }
 
     /**
@@ -121,6 +142,9 @@ public abstract class BodyBuilder<T extends BodyBuilder> implements Buildable<T>
 
         _type = other._type;
         _isSensor = other._isSensor;
+
+        _categoryBits = other._categoryBits;
+        _maskBits = other._maskBits;
         return self();
     }
 

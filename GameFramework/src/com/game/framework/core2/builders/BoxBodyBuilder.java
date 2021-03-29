@@ -24,7 +24,9 @@ public class BoxBodyBuilder extends BodyBuilder<BoxBodyBuilder> {
             _size.y * Math.abs(_scale.y),
             _angleRadians,
             _density,
-            _restitution
+            _restitution,
+            _categoryBits,
+            _maskBits
         );
     }
 
@@ -68,7 +70,9 @@ public class BoxBodyBuilder extends BodyBuilder<BoxBodyBuilder> {
      * @param restitution The restitution of the box.
      * @return The newly created Box Body.
      */
-    private static BodyObj createBox(World world, BodyDef.BodyType type, boolean isSensor, float x, float y, float width, float height, float angle, float density, float restitution) {
+    private static BodyObj createBox(World world, BodyDef.BodyType type, boolean isSensor,
+                                     float x, float y, float width, float height, float angle,
+                                     float density, float restitution, short categoryBits, short maskBits) {
         // body definition
         BodyDef playerDef = new BodyDef();
         playerDef.type = type;
@@ -83,6 +87,8 @@ public class BoxBodyBuilder extends BodyBuilder<BoxBodyBuilder> {
         fixtureDef.density = density;
         fixtureDef.restitution = restitution;
         fixtureDef.isSensor = isSensor;
+        fixtureDef.filter.categoryBits = categoryBits;
+        fixtureDef.filter.maskBits = maskBits;
 
         Body body = world.createBody(playerDef);
         Fixture f = body.createFixture(fixtureDef);

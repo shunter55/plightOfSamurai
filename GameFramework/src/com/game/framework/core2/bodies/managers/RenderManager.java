@@ -12,6 +12,7 @@ import java.util.List;
 public class RenderManager implements Renderable {
     public AnimationManager animations;
     public ParticleManager particles;
+    public TextManager text;
 
     private BodyManager body;
 
@@ -20,6 +21,7 @@ public class RenderManager implements Renderable {
 
         this.animations = new AnimationManager();
         this.particles = new ParticleManager();
+        this.text = new TextManager();
     }
 
     public void update(float elapsedTime) {
@@ -62,4 +64,6 @@ public class RenderManager implements Renderable {
         return animations.runner.getFrame();
     }
 
+    @Override
+    public TextManager getTextManager() { return text; }
 }

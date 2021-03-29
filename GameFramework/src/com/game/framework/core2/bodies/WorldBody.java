@@ -1,17 +1,23 @@
 package com.game.framework.core2.bodies;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.game.framework.core.bodies.Function;
 import com.game.framework.core.controller.InputProcessor;
+import com.game.framework.core.renderer.WorldRenderer;
 import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.managers.BodyManager;
 import com.game.framework.core2.bodies.managers.RenderManager;
+import com.game.framework.core2.bodies.managers.TextManager;
 import com.game.framework.core2.builders.BodyBuilder;
 import com.game.framework.core2.builders.Buildable;
 
 public class WorldBody {
     public WorldManager world;
-
     public BodyManager body;
     public RenderManager render;
     public ControlManager controller;

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.game.framework.core.world.WorldManager;
+import com.game.framework.core2.bodies.managers.TextManager;
 
 public class CustomWorldBody extends WorldBody {
 
@@ -30,6 +31,11 @@ public class CustomWorldBody extends WorldBody {
     @Override
     public Vector2 getOrigin() {
         return origin;
+    }
+
+    @Override
+    public TextManager getTextManager() {
+        return null;
     }
 
     @Override

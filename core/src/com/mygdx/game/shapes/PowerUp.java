@@ -13,7 +13,7 @@ public class PowerUp extends Shape {
    public PowerUp(WorldManager manager, BodyBuilder builder) {
       super(manager, builder);
       weight = 1;
-      type = randomIntRange(0, 3);
+      type = randomIntRange(1, 3);
    }
 
    public PowerUp setType(int weight) {
