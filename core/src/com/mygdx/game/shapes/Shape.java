@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.game.framework.core.renderer.WorldBodyAnimation;
 import com.game.framework.core.world.WorldManager;
 import com.game.framework.core2.bodies.WorldBody;
 import com.game.framework.core2.builders.BodyBuilder;
@@ -17,6 +18,10 @@ public class Shape extends WorldBody {
       super(manager, builder);
       weight = randomIntRange(1, maxWeight);
       increaseWeightRange();
+      render.animations.addAnimation("square", new WorldBodyAnimation(
+          1/4f, "shapes/square/square.jpg"
+      ));
+      render.animations.setDefaultAnimation("square");
    }
 
    public Shape setWeight(int weight) {

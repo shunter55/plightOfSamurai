@@ -48,7 +48,7 @@ enum Categories {
 }
 
 enum Percents {
-    POWERUPS (10),
+    POWERUPS (15),
     SHAPES ((100 - POWERUPS.value())/3);
 
     private final float percents;
@@ -130,9 +130,7 @@ public class PhysicsBalls implements Screen {
 
         catcher.controller.collisions.beginCollision(body -> {
             if (!ballCatcher.contains(body)) {
-System.out.println(ballCatcher.size());
                 ballCatcher.add((Ball) body);
-System.out.println(ballCatcher.size());
 
                 if (ballCatcher.size() == balls.size()) {
                     shiftShapes();
@@ -178,14 +176,15 @@ System.out.println(ballCatcher.size());
 
             if (isFiring &&
                 stopper.body.body.getPosition().dst(curBall.getPosition()) < DELTA) {
-System.out.println(ballChamber.size());
-                ballChamber.peek().body.rebuildBody(new Vector2(1, 1), 0.5f,
+
+                ballChamber.peek().body.rebuildBody(new Vector2(1, 1), 0.6f,
                     (short)(0x1F ^ Categories.BALL.value()));
                 ballChamber.peek().setGrav(true);
                 curBall.setTransform(stopper.body.body.getPosition(), 0);
                 Vector2 dir = getUnitDir( curBall.getPosition(), click );
                 float len = getDir( curBall.getPosition(), click ).len();
-                curBall.setLinearVelocity( dir.scl(5 + 3 * len / 2) );
+//                curBall.setLinearVelocity( dir.scl(5 + 3 * len / 2) );
+                curBall.setLinearVelocity(dir.scl(10));
                 ballChamber.remove();
             }
             // Not Firing.
@@ -195,7 +194,7 @@ System.out.println(ballChamber.size());
             }
         }
         else {
-            System.out.println("end");
+//            System.out.println("end");
         }
 
         for (int i=0; i<balls.size(); i++) {
@@ -368,7 +367,7 @@ System.out.println(ballChamber.size());
         if (ballIsBig(body)) {
             body.body.rebuildBody(new Vector2(1/1.2f, 1/1.2f));
             body.setWeight(body.getWeight() - 1);
-            addBall(ballRadius, new Vector2(randomRange(-3, 3),5));
+            ballChamber.add(addBall(ballRadius, new Vector2(randomRange(-3, 3),5)));
         }
         else {
             for (int i = 0; ; i++) {
@@ -380,7 +379,7 @@ System.out.println(ballChamber.size());
                 if (ballIsBig(current)) {
                     current.body.rebuildBody(new Vector2(1/1.2f, 1/1.2f));
                     current.setWeight(current.getWeight() - 1);
-                    addBall(ballRadius, new Vector2(randomRange(-3, 3),5));
+                    ballChamber.add(addBall(ballRadius, new Vector2(randomRange(-3, 3),5)));
                     break;
                 }
             }
